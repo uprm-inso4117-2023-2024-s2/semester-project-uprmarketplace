@@ -6,7 +6,7 @@ import { Pressable } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
+import { MaterialIcons } from '@expo/vector-icons';
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -59,6 +59,13 @@ export default function TabLayout() {
         options={{
           title: 'Storefront',
           tabBarIcon: ({ color }) => <TabBarIcon name="shopping-bag" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="review"
+        options={{
+          title: 'Review',
+          tabBarIcon: ({ color }) => <MaterialIcons name="rate-review" size={24} color={color} />,
         }}
       />
     </Tabs>
