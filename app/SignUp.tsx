@@ -1,26 +1,20 @@
+
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 import React, { useState } from "react";
-//import { useNavigation } from '@react-navigation/native';
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Dimensions, Image, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 const dimensions = Dimensions.get("window");
 
 export default function SignUp() {
-  //const navigation = useNavigation(); // Get access to navigation
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false); // State to control password visibility
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigation = useNavigation();
 
   function clearVariables() {
     setFirstName('');
@@ -47,10 +41,15 @@ export default function SignUp() {
       alert("Passwords do not match.");
       return;
     }
-    console.log("Sign Up successful", { firstName, lastName, email }); // Simulate successful sign-up
-    // TODO: Implement actual sign-up logic here once the backend is ready
+    if (!firstName || !lastName || !email || !password || !confirmPass) {
+      alert("Please fill in all the required fields.");
+      return;
+    }
+    console.log("Sign Up successful", { firstName, lastName, email });
     clearVariables();
-    //navigation.navigate('');
+    
+    // Navigate back to the home screen after successful sign-up
+    navigation.navigate('(tabs)'); // Replace '(tabs)' with the name of your home screen later
   };
 
   return (
@@ -124,19 +123,15 @@ export default function SignUp() {
               secureTextEntry={!passwordVisible}
             />
           </View>
-          <Link
-            href="/"
+          <Pressable
+            style={({ pressed }) => [
+              styles.signUpButton,
+              { backgroundColor: pressed ? "#000000" : "#41a425" },
+            ]}
+            onPress={handleSignUp}
           >
-            <Pressable
-              style={({ pressed }) => [
-                styles.signUpButton,
-                { backgroundColor: pressed ? "#000000" : "#41a425" },
-              ]}
-              onPress={handleSignUp}
-            >
-              <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>Sign Up</Text>
-            </Pressable>
-          </Link>
+            <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>Sign Up</Text>
+          </Pressable>
         </View>
       </ScrollView>
       <Link
