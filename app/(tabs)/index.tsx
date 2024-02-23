@@ -1,14 +1,21 @@
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+export default function HomeScreen() {
+  const navigation = useNavigation();
 
-export default function TabOneScreen() {
+  const handleExplorePress = () => {
+    navigation.navigate('browse'); // Navigate to the Browse tab
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={styles.title}>Welcome Anne Smith</Text>
+      <TouchableOpacity style={styles.button} onPress={handleExplorePress}>
+        <Text style={styles.buttonText}>Explore</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -20,12 +27,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  button: {
+    backgroundColor: '#41a425',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
