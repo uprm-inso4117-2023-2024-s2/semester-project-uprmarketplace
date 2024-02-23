@@ -55,9 +55,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="personal-storefront"
         options={{
-          title: 'Storefront',
+          title: 'Personal Storefront',
           tabBarIcon: ({ color }) => <TabBarIcon name="shopping-bag" color={color} />,
         }}
       />
