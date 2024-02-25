@@ -1,8 +1,21 @@
 import React from 'react';
 import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { IconButton } from 'react-native-paper';
 
-const RoundedSquareImage = ({ source, name, price, description }) => {
+interface Props {
+  source: any;
+  name: string;
+  price: string;
+  description: string;
+  updateCartList: (item: Listing) => void;
+}
+
+const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList }) => {
+  const handleAddToCart = () => {
+    const item: Listing = { id: Math.random().toString(), source, name, price, description };
+    updateCartList(item);
+  };
+
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.imageContainer}>
@@ -13,6 +26,12 @@ const RoundedSquareImage = ({ source, name, price, description }) => {
         <Text style={styles.price}>Price: {price}</Text>
         <Text style={styles.description}>{description}</Text>
       </View>
+      <IconButton
+        icon="plus"
+        color="#000"
+        size={24}
+        onPress={handleAddToCart}
+      />
     </TouchableOpacity>
   );
 };
