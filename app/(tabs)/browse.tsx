@@ -8,13 +8,15 @@ interface Listing {
   source: any;
   name: string;
   price: string;
+  quantity: number;
   description: string;
+
 }
 
 const data: Listing[] = [
-  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.' },
-  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez' },
-  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948' },
+  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.', quantity: 2 },
+  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez', quantity: 0 },
+  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948', quantity: 3 },
 ];
 
 export default function BrowseScreen() {
@@ -34,6 +36,7 @@ export default function BrowseScreen() {
       source={item.source}
       name={item.name}
       price={item.price}
+      quantity={item.quantity}
       description={item.description}
       updateCartList={updateCartList}
     />
@@ -136,14 +139,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: -0 
+    marginTop: -0
   },
   badge: {
     position: 'absolute',
     top: -5,
     right: -5,
   },
-  
+
   searchBar: {
     width: '90%',
     backgroundColor: '#ffffff',
@@ -204,6 +207,10 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  quantity: {
+    fontSize: 14,
+    color: '#888',
   },
   price: {
     fontSize: 14,

@@ -6,13 +6,14 @@ interface Props {
   source: any;
   name: string;
   price: string;
+  quantity: number;
   description: string;
   updateCartList: (item: Listing) => void;
 }
 
-const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList }) => {
+const RoundedSquareImage: React.FC<Props> = ({ source, name, price, quantity, description, updateCartList }) => {
   const handleAddToCart = () => {
-    const item: Listing = { id: Math.random().toString(), source, name, price, description };
+    const item: Listing = { id: Math.random().toString(), source, name, price, quantity, description };
     updateCartList(item);
   };
 
@@ -24,14 +25,21 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
       <View style={styles.detailsContainer}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>Price: {price}</Text>
+        {quantity !== 0 ? (
+          <Text style={styles.quantity}>Qty: {quantity}</Text>
+        ) : (
+          <Text style={[styles.quantity, { color: 'red' }]}>Out of Stock</Text>
+        )}
         <Text style={styles.description}>{description}</Text>
       </View>
-      <IconButton
-        icon="plus"
-        color="#000"
-        size={24}
-        onPress={handleAddToCart}
-      />
+      {quantity !== 0 && (
+        <IconButton
+          icon="plus"
+          color="#000"
+          size={24}
+          onPress={handleAddToCart}
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -66,6 +74,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  quantity: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 5,
   },
   price: {
     fontSize: 14,
