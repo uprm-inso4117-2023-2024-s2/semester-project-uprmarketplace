@@ -14,6 +14,18 @@ const userItems = [
   { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg') },
 ];
 
+const banners = [
+  require('../../assets/images/banner.jpg'),
+  require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/banner.jpg'),
+];
+
+const profilePictures = [
+  require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/profile-picture-default.png'),
+];
+
 const PersonalStorefrontPage = () => {
   const [userData, setUserData] = useState({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
@@ -108,6 +120,60 @@ const PersonalStorefrontPage = () => {
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => {updateName(newName); setNameModalVisible(false);}}>
+                <Text style={styles.modalButton}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isBannerModalVisible}
+        onRequestClose={() => setBannerModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Banner</Text>
+            {banners.map((banner, index) => (
+              <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
+                <Image source={banner} style={styles.bannerPreview} />
+              </TouchableOpacity>
+            ))}
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setBannerModalVisible(false)}>
+                <Text style={styles.modalButton}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {updateBanner(newBanner); setBannerModalVisible(false);}}>
+                <Text style={styles.modalButton}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isProfilePicModalVisible}
+        onRequestClose={() => setProfilePicModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Profile Picture</Text>
+            <View style={styles.pictureRow}>
+            {profilePictures.map((image, index) => (
+              <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
+                <Image source={image} style={styles.picturePreview} />
+              </TouchableOpacity>
+            ))}
+            </View>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setProfilePicModalVisible(false)}>
+                <Text style={styles.modalButton}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {updateProfilePic(newProfilePic); setProfilePicModalVisible(false);}}>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -223,7 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 20,
-    width: '80%',
+    width: '60%',
     maxHeight: '80%',
   },
   modalTitle: {
@@ -245,6 +311,26 @@ const styles = StyleSheet.create({
   modalButton: {
     fontSize: 16,
     color: '#41a425',
+  },
+  bannerPreview: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'cover',
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  pictureRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  picturePreview: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+    borderRadius: 50,
+    marginRight: 20,
+    marginBottom: 20,
   },
 });
 
