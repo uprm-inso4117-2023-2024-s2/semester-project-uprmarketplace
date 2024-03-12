@@ -1,5 +1,5 @@
 import React , { useState } from 'react';
-import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import  { IconButton } from 'react-native-paper';
 
 const renderStars = (rating) => {
@@ -13,20 +13,27 @@ const userItems = [
   { id: '1', itemName: 'Lab Coat', itemPrice: '$50', itemImage: require('../../assets/images/image4.jpg') },
   { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg') },
 ];
-
+// Hardcoded banners to test
 const banners = [
   require('../../assets/images/banner.jpg'),
   require('../../assets/images/profile-picture-default.png'),
   require('../../assets/images/banner.jpg'),
-];
-
-const profilePictures = [
+  require('../../assets/images/banner.jpg'),
   require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/banner.jpg'),
+];
+// Hardcoded profile pictures to test
+const profilePictures = [
+  require('../../assets/images/image2.jpg'),
+  require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/profile-picture-default.png'),
+  require('../../assets/images/image2.jpg'),
   require('../../assets/images/profile-picture-default.png'),
   require('../../assets/images/profile-picture-default.png'),
 ];
 
 const PersonalStorefrontPage = () => {
+
   const [userData, setUserData] = useState({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
     profileBanner: require('../../assets/images/banner.jpg'),
@@ -54,7 +61,6 @@ const PersonalStorefrontPage = () => {
     setUserData(prevData => ({...prevData, profilePicture: newProfilePic}));
   }
 
-  
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Image source={item.itemImage} style={styles.itemImage} />
@@ -77,13 +83,14 @@ const PersonalStorefrontPage = () => {
         />
       </View>
       <View style={styles.profileContainer}>
-        <Image source={userData.profilePicture} style={styles.profilePicture} />
-        <View style={styles.profilePictureIconContainer}>
+        <View style={styles.profilePictureAndIconContainer}>
+          <Image source={userData.profilePicture} style={styles.profilePicture} />
           <IconButton
           icon="image-edit"
           color="#fff"
           size={25}
           onPress={() => setProfilePicModalVisible(true)}
+          style={styles.profilePictureIconContainer}
           />
         </View>
         <View style={styles.profileInfo}>
@@ -100,6 +107,7 @@ const PersonalStorefrontPage = () => {
           />
         </View>
       </View>
+      {/* Modal for editing name */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -126,7 +134,7 @@ const PersonalStorefrontPage = () => {
           </View>
         </View>
       </Modal>
-
+      {/* Modal for editing banner */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -136,11 +144,13 @@ const PersonalStorefrontPage = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Banner</Text>
+            <ScrollView showsVerticalScrollIndicator={true} style={styles.bannerColumns}>
             {banners.map((banner, index) => (
               <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
                 <Image source={banner} style={styles.bannerPreview} />
               </TouchableOpacity>
             ))}
+            </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setBannerModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
@@ -152,7 +162,7 @@ const PersonalStorefrontPage = () => {
           </View>
         </View>
       </Modal>
-
+      {/* Modal for editing profile picture */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -162,13 +172,13 @@ const PersonalStorefrontPage = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Profile Picture</Text>
-            <View style={styles.pictureRow}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.pictureRow}>
             {profilePictures.map((image, index) => (
               <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
                 <Image source={image} style={styles.picturePreview} />
               </TouchableOpacity>
             ))}
-            </View>
+            </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setProfilePicModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
@@ -207,7 +217,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -10,
     top: 0,
-    marginTop: -0
   },
   profileContainer: {
     flexDirection: 'row',
@@ -216,17 +225,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   profilePicture: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '100%',
     borderRadius: 50,
-    marginRight: 20,
     borderWidth: 2,
     borderColor: '#fff',
   },
+  profilePictureAndIconContainer: {
+    position: 'relative',
+    marginRight: 20,
+    width: 100,
+    height: 100,
+  },
   profilePictureIconContainer: {
     position: 'absolute',
-    right: 100,
-    top: 70,
+    left: 70,
+    top: 60,
   },
   profileInfo: {
     justifyContent: 'center',
@@ -289,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 20,
-    width: '60%',
+    width: '35%',
     maxHeight: '80%',
   },
   modalTitle: {
@@ -312,6 +326,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#41a425',
   },
+  bannerColumns: {
+    height: 200,
+    marginBottom: 10,
+    paddingRight: 10,
+  },
   bannerPreview: {
     width: '100%',
     height: 100,
@@ -320,9 +339,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pictureRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
+    height: 120,
+    marginBottom: 10,
   },
   picturePreview: {
     width: 100,
