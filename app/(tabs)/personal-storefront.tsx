@@ -94,19 +94,20 @@ const PersonalStorefrontPage = () => {
           />
         </View>
         <View style={styles.profileInfo}>
-          <Text style={styles.profileName}>{userData.name}</Text>
+          <View style={styles.profileNameAndIconContainer}>
+            <Text style={styles.profileName}>{userData.name}</Text>
+            <IconButton
+            icon="pencil"
+            color="#fff"
+            size={20}
+            onPress={() => setNameModalVisible(true)}
+            />
+          </View>
           <Text style={styles.profileStatus}>{userData.status}</Text>
           <Text style={styles.profileRatings}>{renderStars(userData.averageRatings)}</Text>
         </View>
-        <View style={styles.profileNameIconContainer}>
-          <IconButton
-          icon="pencil"
-          color="#fff"
-          size={20}
-          onPress={() => setNameModalVisible(true)}
-          />
-        </View>
       </View>
+
       {/* Modal for editing name */}
       <Modal
         animationType="slide"
@@ -244,17 +245,16 @@ const styles = StyleSheet.create({
   },
   profileInfo: {
     justifyContent: 'center',
-    marginTop: 70,
+    marginTop: 60,
   },
   profileName: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  profileNameIconContainer: {
-    position: 'absolute',
-    right: -40,
-    top: 57,
-    marginTop: -0
+  profileNameAndIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: -10,
   },
   profileStatus: {
     fontSize: 16,
