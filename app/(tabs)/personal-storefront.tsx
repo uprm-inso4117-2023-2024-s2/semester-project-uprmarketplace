@@ -46,11 +46,18 @@ const PersonalStorefrontPage = () => {
   const [isBannerModalVisible, setBannerModalVisible] = useState(false);
   const [isProfilePicModalVisible, setProfilePicModalVisible] = useState(false);
   const [newName, setNewName] = useState(userData.name);
+  const [error, setError] = useState('');
   const [newBanner, setNewBanner] = useState(userData.profileBanner);
   const [newProfilePic, setNewProfilePic] = useState(userData.profilePicture);
 
   const updateName = (newName) => {
+    if (newName === '') {
+      setError('Name cannot be empty');
+      return;
+    }
     setUserData(prevData => ({...prevData, name: newName}));
+    setNameModalVisible(false);
+    setError('');
   };
 
   const updateBanner = (newBanner) => { 
@@ -124,11 +131,12 @@ const PersonalStorefrontPage = () => {
               value={newName}
               onChangeText={setNewName}
             />
+            {error ? <Text style={styles.errorMsg}>{error}</Text> : null}
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setNameModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {updateName(newName); setNameModalVisible(false);}}>
+              <TouchableOpacity onPress={() => {updateName(newName);}}>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -348,6 +356,11 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 50,
     marginRight: 20,
+    marginBottom: 20,
+  },
+  errorMsg: {
+    color: 'red',
+    fontSize: 16,
     marginBottom: 20,
   },
 });
