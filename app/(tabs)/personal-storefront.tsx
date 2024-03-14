@@ -8,11 +8,6 @@ const renderStars = (rating) => {
   return filledStars + emptyStars;
 };
 
-
-const userItems = [
-  { id: '1', itemName: 'Lab Coat', itemPrice: '$50', itemImage: require('../../assets/images/image4.jpg') },
-  { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg') },
-];
 // Hardcoded banners to test
 const banners = [
   require('../../assets/images/banner.jpg'),
@@ -22,6 +17,7 @@ const banners = [
   require('../../assets/images/profile-picture-default.png'),
   require('../../assets/images/banner.jpg'),
 ];
+
 // Hardcoded profile pictures to test
 const profilePictures = [
   require('../../assets/images/image2.jpg'),
@@ -33,6 +29,10 @@ const profilePictures = [
 ];
 
 const PersonalStorefrontPage = () => {
+  const [userItems, setUserItems] = useState([
+    { id: '1', itemName: 'Lab Coat', itemPrice: '$50', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock' },
+    { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock' },
+  ]);
 
   const [userData, setUserData] = useState({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
@@ -49,6 +49,9 @@ const PersonalStorefrontPage = () => {
   const [error, setError] = useState('');
   const [newBanner, setNewBanner] = useState(userData.profileBanner);
   const [newProfilePic, setNewProfilePic] = useState(userData.profilePicture);
+  const [isStatusModalVisible, setStatusModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [newStatus, setNewStatus] = useState('');
 
   const updateName = (newName) => {
     if (newName === '') {
@@ -62,11 +65,29 @@ const PersonalStorefrontPage = () => {
 
   const updateBanner = (newBanner) => {
     setUserData(prevData => ({ ...prevData, profileBanner: newBanner }));
-  }
+  };
 
   const updateProfilePic = (newProfilePic) => {
     setUserData(prevData => ({ ...prevData, profilePicture: newProfilePic }));
-  }
+  };
+
+  const openStatusModal = (item) => {
+    setSelectedItem(item);
+    setStatusModalVisible(true);
+  };
+
+  const updateStatus = (newStatus) => {
+    if (selectedItem) {
+      const updatedItems = userItems.map(item => {
+        if (item.id === selectedItem.id) {
+          return { ...item, status: newStatus };
+        }
+        return item;
+      });
+      setUserItems(updatedItems);
+    }
+    setStatusModalVisible(false);
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -74,6 +95,9 @@ const PersonalStorefrontPage = () => {
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
+        <TouchableOpacity onPress={() => openStatusModal(item)}>
+          <Text style={styles.itemStatus}>{item.status}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -143,6 +167,7 @@ const PersonalStorefrontPage = () => {
           </View>
         </View>
       </Modal>
+
       {/* Modal for editing banner */}
       <Modal
         animationType="slide"
@@ -171,6 +196,7 @@ const PersonalStorefrontPage = () => {
           </View>
         </View>
       </Modal>
+
       {/* Modal for editing profile picture */}
       <Modal
         animationType="slide"
@@ -196,6 +222,32 @@ const PersonalStorefrontPage = () => {
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal for editing status */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isStatusModalVisible}
+        onRequestClose={() => setStatusModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Status</Text>
+            <TouchableOpacity onPress={() => updateStatus('In Stock')}>
+              <Text style={styles.modalOption}>In Stock</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => updateStatus('Out of Stock')}>
+              <Text style={styles.modalOption}>Out of Stock</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => updateStatus('Unavailable')}>
+              <Text style={styles.modalOption}>Unavailable</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
+              <Text style={styles.modalButton}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -298,6 +350,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   itemPrice: {
+    fontSize: 14,
+    color: '#888',
+  },
+  itemStatus: {
     fontSize: 14,
     color: '#888',
   },
