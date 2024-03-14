@@ -1,6 +1,6 @@
-import React , { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import  { IconButton } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 
 const renderStars = (rating) => {
   const filledStars = '★'.repeat(rating);
@@ -55,17 +55,17 @@ const PersonalStorefrontPage = () => {
       setError('Name cannot be empty');
       return;
     }
-    setUserData(prevData => ({...prevData, name: newName}));
+    setUserData(prevData => ({ ...prevData, name: newName }));
     setNameModalVisible(false);
     setError('');
   };
 
-  const updateBanner = (newBanner) => { 
-    setUserData(prevData => ({...prevData, profileBanner: newBanner}));
+  const updateBanner = (newBanner) => {
+    setUserData(prevData => ({ ...prevData, profileBanner: newBanner }));
   }
 
-  const updateProfilePic = (newProfilePic) => { 
-    setUserData(prevData => ({...prevData, profilePicture: newProfilePic}));
+  const updateProfilePic = (newProfilePic) => {
+    setUserData(prevData => ({ ...prevData, profilePicture: newProfilePic }));
   }
 
   const renderItem = ({ item }) => (
@@ -83,31 +83,31 @@ const PersonalStorefrontPage = () => {
       <Image source={userData.profileBanner} style={styles.profileBanner} />
       <View style={styles.profileBannerIconContainer}>
         <IconButton
-        icon="brush"
-        color="#fff"
-        size={25}
-        onPress={() => setBannerModalVisible(true)}
+          icon="brush"
+          color="#fff"
+          size={25}
+          onPress={() => setBannerModalVisible(true)}
         />
       </View>
       <View style={styles.profileContainer}>
         <View style={styles.profilePictureAndIconContainer}>
           <Image source={userData.profilePicture} style={styles.profilePicture} />
           <IconButton
-          icon="image-edit"
-          color="#fff"
-          size={25}
-          onPress={() => setProfilePicModalVisible(true)}
-          style={styles.profilePictureIconContainer}
+            icon="image-edit"
+            color="#fff"
+            size={25}
+            onPress={() => setProfilePicModalVisible(true)}
+            style={styles.profilePictureIconContainer}
           />
         </View>
         <View style={styles.profileInfo}>
           <View style={styles.profileNameAndIconContainer}>
             <Text style={styles.profileName}>{userData.name}</Text>
             <IconButton
-            icon="pencil"
-            color="#fff"
-            size={20}
-            onPress={() => setNameModalVisible(true)}
+              icon="pencil"
+              color="#fff"
+              size={20}
+              onPress={() => setNameModalVisible(true)}
             />
           </View>
           <Text style={styles.profileStatus}>{userData.status}</Text>
@@ -136,7 +136,7 @@ const PersonalStorefrontPage = () => {
               <TouchableOpacity onPress={() => setNameModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {updateName(newName);}}>
+              <TouchableOpacity onPress={() => { updateName(newName); }}>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -154,17 +154,17 @@ const PersonalStorefrontPage = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Banner</Text>
             <ScrollView showsVerticalScrollIndicator={true} style={styles.bannerColumns}>
-            {banners.map((banner, index) => (
-              <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
-                <Image source={banner} style={styles.bannerPreview} />
-              </TouchableOpacity>
-            ))}
+              {banners.map((banner, index) => (
+                <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
+                  <Image source={banner} style={styles.bannerPreview} />
+                </TouchableOpacity>
+              ))}
             </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setBannerModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {updateBanner(newBanner); setBannerModalVisible(false);}}>
+              <TouchableOpacity onPress={() => { updateBanner(newBanner); setBannerModalVisible(false); }}>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -182,17 +182,17 @@ const PersonalStorefrontPage = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Profile Picture</Text>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.pictureRow}>
-            {profilePictures.map((image, index) => (
-              <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
-                <Image source={image} style={styles.picturePreview} />
-              </TouchableOpacity>
-            ))}
+              {profilePictures.map((image, index) => (
+                <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
+                  <Image source={image} style={styles.picturePreview} />
+                </TouchableOpacity>
+              ))}
             </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setProfilePicModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {updateProfilePic(newProfilePic); setProfilePicModalVisible(false);}}>
+              <TouchableOpacity onPress={() => { updateProfilePic(newProfilePic); setProfilePicModalVisible(false); }}>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
