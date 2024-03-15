@@ -1,6 +1,14 @@
 import React from 'react';
 import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
 
+interface PersonalItems {
+  id: string;
+  itemName: string;
+  itemPrice: string;
+  category: string;
+  itemImage: any;
+}
+
 const renderStars = (rating) => {
   const filledStars = '★'.repeat(rating);
   const emptyStars = '☆'.repeat(5 - rating);
@@ -15,18 +23,21 @@ const userData = {
   averageRatings: 4,
 };
 
-const userItems = [
-  { id: '1', itemName: 'Lab Coat', itemPrice: '$50', itemImage: require('../../assets/images/image4.jpg') },
-  { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg') },
+const data: PersonalItems[] = [
+  { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg') },
+  { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg') },
 ];
+const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
+const filteredData = data.filter(item => allowedCategories.includes(item.category));
 
 const PersonalStorefrontPage = () => {
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: PersonalItems }) => (
     <View style={styles.itemContainer}>
       <Image source={item.itemImage} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
+        <Text style={styles.category}>{item.category}</Text>
       </View>
     </View>
   );
@@ -45,7 +56,7 @@ const PersonalStorefrontPage = () => {
 
       <Text style={styles.listingsHeading}>Listings</Text>
       <FlatList
-        data={userItems}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         style={styles.itemList}
@@ -121,6 +132,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   itemPrice: {
+    fontSize: 14,
+    color: '#888',
+  },
+  category: {
     fontSize: 14,
     color: '#888',
   },

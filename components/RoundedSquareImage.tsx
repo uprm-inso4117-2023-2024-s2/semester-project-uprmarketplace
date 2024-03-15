@@ -6,13 +6,14 @@ interface Props {
   source: any;
   name: string;
   price: string;
+  category: string;
   description: string;
   updateCartList: (item: Listing) => void;
 }
 
 const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList }) => {
   const handleAddToCart = () => {
-    const item: Listing = { id: Math.random().toString(), source, name, price, description };
+    const item: Listing = { id: Math.random().toString(), source, name, price,description };
     updateCartList(item);
   };
 
@@ -68,6 +69,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   price: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 5,
+  },
+  category: {
     fontSize: 14,
     color: '#888',
     marginTop: 5,
