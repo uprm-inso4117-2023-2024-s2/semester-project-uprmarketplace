@@ -30,9 +30,11 @@ const profilePictures = [
 
 const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
-    { id: '1', itemName: 'Lab Coat', itemPrice: '$50', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock' },
-    { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock' },
+    { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock' },
+    { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock' },
   ]);
+  const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
+const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
 
   const [userData, setUserData] = useState({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
@@ -95,6 +97,7 @@ const PersonalStorefrontPage = () => {
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
+        <Text style={styles.category}>{item.category}</Text>
         <TouchableOpacity onPress={() => openStatusModal(item)}>
           <Text style={styles.itemStatus}>{item.status}</Text>
         </TouchableOpacity>
@@ -254,7 +257,7 @@ const PersonalStorefrontPage = () => {
 
       <Text style={styles.listingsHeading}>Listings</Text>
       <FlatList
-        data={userItems}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         style={styles.itemList}
@@ -350,6 +353,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   itemPrice: {
+    fontSize: 14,
+    color: '#888',
+  },
+  category: {
     fontSize: 14,
     color: '#888',
   },
