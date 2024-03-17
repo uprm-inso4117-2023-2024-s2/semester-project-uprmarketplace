@@ -1,5 +1,5 @@
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -18,6 +18,8 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState('')
+  const [errMsg, setErrMsg] = useState('')
+  const [missingInfo, setMissingInfo] = useState(false)
 
   function clearVariables(){
     setFirstName('')
@@ -25,6 +27,42 @@ export default function SignUp() {
     setEmail('')
     setPassword('')
     setConfirmPass('')
+  }
+
+  async function signUp() {
+    setMissingInfo(false)
+    if (
+      password == "" ||
+      email == "" ||
+      confirmPass == "" ||
+      firstName == "" ||
+      lastName == ""
+    ) {
+      setMissingInfo(true)
+      return
+    }
+    await fetch(`http://127.0.0.1:5000/register`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error == undefined) {
+          clearVariables();
+          router.navigate('/')
+        }
+        else {
+          setErrMsg(data.error)
+        }
+      })
+      .catch((e) => console.log("error signing up", e))
   }
 
   const Input = ({ label, value, onChangeText, placeholder }: any) => {
@@ -102,12 +140,25 @@ export default function SignUp() {
             <Text style={styles.inputLabel}>Email</Text>
             <TextInput
               value={email}
-              onChangeText={(e: any) => setEmail(e)}
+              onChangeText={(e: any) => {
+                if (errMsg != "") setErrMsg("");
+                setEmail(e);
+              }}
               style={styles.input}
               placeholder="Enter UPRM email"
               placeholderTextColor="gray"
             />
           </View>
+          <Text
+            style={{
+              color: "red",
+              fontSize: 12,
+              alignSelf: "center",
+              marginTop: -10,
+            }}
+          >
+            {errMsg != "" && errMsg}
+          </Text>
           <View>
             <Text style={styles.inputLabel}>Password</Text>
             <TextInput
@@ -130,12 +181,34 @@ export default function SignUp() {
               secureTextEntry
             />
           </View>
+          <Text
+            style={{
+              color: "red",
+              fontSize: 12,
+              alignSelf: "center",
+              marginTop: -10,
+            }}
+          >
+            {password != confirmPass && "Passwords do not match"}
+          </Text>
         </View>
-        <Link
+        {/* <Link
           href="/"
           style={{ width: 375, alignSelf: "center", marginTop: 30 }}
           onPress={() => clearVariables()}
+        > */}
+        <Text
+          style={{
+            color: "red",
+            fontSize: 18,
+            alignSelf: "center",
+            marginTop: 10,
+            marginBottom: -20
+          }}
         >
+          {missingInfo && "Missing Information"}
+        </Text>
+        <View style={{ width: 375, alignSelf: "center", marginTop: 30 }}>
           <Pressable
             style={({ pressed }) => [
               styles.singUpButton,
@@ -143,13 +216,14 @@ export default function SignUp() {
                 backgroundColor: pressed ? "#000000" : "#41a425",
               },
             ]}
-            onPress={() => console.log("Sign Up")}
+            onPress={async () => await signUp()}
           >
             <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
               Sign Up
             </Text>
           </Pressable>
-        </Link>
+        </View>
+        {/* </Link> */}
         <Link
           href="/LogIn"
           style={{ alignSelf: "center", marginTop: 15, marginBottom: 30 }}

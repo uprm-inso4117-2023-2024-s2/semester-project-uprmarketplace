@@ -1,5 +1,5 @@
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -14,10 +14,35 @@ const dimensions = Dimensions.get("window");
 export default function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState('')
 
   function clearVariables(){
     setEmail('')
     setPassword('')
+  }
+
+  async function logIn() {
+    setErrMsg('')
+    await fetch(`http://127.0.0.1:5000/login`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        Email: email,
+        Password: password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error == undefined) {
+          clearVariables();
+          router.navigate('/')
+        }
+        else{
+          setErrMsg(data.error)
+        }
+      })
+      .catch((e) => console.log("error logging in", e))
   }
 
   return (
@@ -54,6 +79,7 @@ export default function LogIn() {
           alignItems: "center",
           gap: 25,
           justifyContent: "center",
+          marginBottom: -25
         }}
       >
         <View>
@@ -79,17 +105,28 @@ export default function LogIn() {
         </View>
       </View>
       <Text
+        style={{
+          color: "red",
+          fontSize: 12,
+          alignSelf: "center",
+          marginBottom: '3%'
+        }}
+      >
+        {errMsg != "" && errMsg}
+      </Text>
+      <Text
         style={styles.forgotPass}
         selectable
         onPress={() => console.log("forgot pass")}
       >
         Forgot Password?
       </Text>
-      <Link
-        href="/"
+      {/* <Link
+        // href="/"
         style={{ alignSelf: "center" }}
-        onPress={() => clearVariables()}
-      >
+        onPress={async () => await logIn()}
+      > */}
+      <View style={{ alignSelf: "center" }}>
         <Pressable
           style={({ pressed }) => [
             styles.logInButton,
@@ -97,12 +134,14 @@ export default function LogIn() {
               backgroundColor: pressed ? "#000000" : "#41a425",
             },
           ]}
+          onPress={async () => await logIn()}
         >
           <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
             Log In
           </Text>
         </Pressable>
-      </Link>
+      </View>
+      {/* </Link> */}
       <Link
         href="/SignUp"
         style={{ alignSelf: "center", marginTop: 10 }}
