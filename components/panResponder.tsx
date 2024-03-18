@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import { View, PanResponder, Text } from 'react-native';
+
+export const StateContext = createContext();
 
 export default function PriceRangeSlider() {
   const [buttonPosition, setButtonPosition] = useState(50); // Initial position of the button
@@ -18,6 +20,7 @@ export default function PriceRangeSlider() {
   });
 
   return (
+    <StateContext.Provider value={[buttonPosition,setButtonPosition]}>
     <View>
       <View style={styles.priceRange}>
         <View style={[styles.priceLine, { left: 0, width: `${buttonPosition}%` }]} />
@@ -28,6 +31,7 @@ export default function PriceRangeSlider() {
       </View>
       <Text style={styles.selectedPrice}>Selected Price: ${Math.round(buttonPosition)}</Text>
     </View>
+    </StateContext.Provider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, TextInput, View, FlatList } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import EditScreenInfo from '@/components/EditScreenInfo';
@@ -7,56 +7,90 @@ import RoundedSquareImage from '@/components/RoundedSquareImage';
 
 import PriceRangeSlider from '@/components/panResponder';
 import DropdownMenu from '@/components/dropdown';
-
-const data = [
-    { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.' },
-    { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez' },
-    { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948' },
-    //añadir extra listings para que la pagina se vea mas viva -sm
-  ];
-  const categories = [
-    'Category 1', 'Category 2', 'Category 3'];
-  
-  const handleCategorySelect = (category) => {
-    // Handle the selected category
-    console.log('Selected category:', category);
-  };
+import { StateContext } from '@/components/panResponder';
 
 
-  const Drawer = createDrawerNavigator();
-  function CustomDrawerContent(props) {
-    return (  <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      {/* Additional custom drawer items can be added here */}
-      <PriceRangeSlider />
-      <DropdownMenu
-        options={categories} // Pass the options
-        onSelect={handleCategorySelect} // Pass the onSelect function
-      />
-    </DrawerContentScrollView>
+  //const Drawer = createDrawerNavigator();
+  // function CustomDrawerContent(props) {
+  //   return (  <DrawerContentScrollView {...props}>
+  //     <DrawerItemList {...props} />
+  //     {/* Additional custom drawer items can be added here */}
+  //     <PriceRangeSlider />
+  //     <DropdownMenu
+  //       options={categories} // Pass the options
+  //       onSelect={handleCategorySelect} // Pass the onSelect function
+  //     />
+  //   </DrawerContentScrollView>
       
-      );
-    }
+  //     );
+  //   }
+
+
     export default function BrowseScreen() {
-      return (
-        <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-          <Drawer.Screen name="Browse" component={BrowseContent} />
-          {/* Additional screens can be added here */}
-        </Drawer.Navigator>
-      );
-    }
 
 
-    function BrowseContent() {
-    const renderItem = ({ item }) => (
+
+      
+      const [data,setData] =useState([
+        { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: 40, description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.', creationDate: '2022-05-29' },
+        { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: 75, description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez',  creationDate: '2020-05-29'},
+        { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: 100, description: 'Poco uso, info: 312-194-1948',  creationDate: '2021-02-29' },
+        
+        
+        //añadir extra listings para que la pagina se vea mas viva -sm
+      ]);
+    
+      const categories = [
+        'Category 1', 'Category 2', 'Category 3'];
+      
+    const handleCategorySelect = (category: any) => {
+        // Handle the selected category
+        console.log('Selected category:', category);
+      };
+    
+      const sort =[
+        "Lowest to Highest", "Highest to Low",
+        "Newest to Oldest", "Oldest to New"
+      ];
+    
+      const handlePriceSort = (sort: any) => {
+        // Handle the selected category
+        // console.log('Selected Sort:', sort);
+        let sortedData = [...data];
+        switch(sort){
+          case "Lowest to Highest":
+            sortedData.sort((a,b)=> Number(a.price) - Number(b.price));
+            setData(sortedData);
+          break
+          case "Highest to Low":
+            sortedData.sort((a,b)=> Number(b.price) - Number(a.price));
+            setData(sortedData);
+          break
+          case "Newest to Oldest":
+            sortedData.sort((a,b)=> Date.parse(b.creationDate) - Date.parse(a.creationDate));
+            setData(sortedData);
+
+          break
+          case "Oldest to New":
+            sortedData.sort((a,b)=> Date.parse(a.creationDate) - Date.parse(b.creationDate));
+            setData(sortedData);
+          break
+        }}
+    
+
+
+      const renderItem = ({ item }) => (
         <RoundedSquareImage
           source={item.source}
           name={item.name}
           price={item.price}
           description={item.description}
+          creationDate={item.creationDate}
         />
       );
-  return (
+
+      
+      return (
     <View style={styles.container}>
       <Text style={styles.title}>Browse Page</Text>
       <View style={styles.searchBar}>
@@ -65,6 +99,15 @@ const data = [
           placeholder="Search for products near you..."
           placeholderTextColor="#888"
         />
+        <PriceRangeSlider />
+      <DropdownMenu
+        options={categories} // Pass the options
+        onSelect={handleCategorySelect} // Pass the onSelect function
+      />
+        <DropdownMenu
+        options={sort} // Pass the options
+        onSelect={handlePriceSort} // Pass the onSelect function
+      />
       </View>
       <FlatList
         data={data}

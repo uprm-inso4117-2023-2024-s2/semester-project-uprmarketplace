@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
 import { useNavigation } from 'expo-router';
 
-const RoundedSquareImage = ({ source, name, price, description }) => {
+const RoundedSquareImage = ({ source, name, price, description, creationDate }) => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.imageContainer}>
@@ -12,6 +12,7 @@ const RoundedSquareImage = ({ source, name, price, description }) => {
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.price}>Price: {price}</Text>
         <Text style={styles.description}>{description}</Text>
+        <Text style={styles.description}>{creationDate}</Text>
       </View>
     </TouchableOpacity>
   );
