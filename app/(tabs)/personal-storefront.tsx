@@ -28,15 +28,23 @@ const profilePictures = [
   require('../../assets/images/profile-picture-default.png'),
 ];
 
+interface StudentData {
+  profilePicture: NodeRequire;
+  profileBanner: NodeRequire;
+  name: string;
+  status: string;
+  averageRatings: number;
+}
+
 const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
     { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock' },
     { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock' },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
-const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
+  const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState <StudentData> ({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
     profileBanner: require('../../assets/images/banner.jpg'),
     name: 'Anne Smith',
