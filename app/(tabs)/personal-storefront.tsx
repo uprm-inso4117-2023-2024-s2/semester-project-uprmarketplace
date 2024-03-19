@@ -44,7 +44,7 @@ const PersonalStorefrontPage = () => {
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
   const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
 
-  const [userData, setUserData] = useState <StudentData> ({
+  const [userData, setUserData] = useState<StudentData>({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
     profileBanner: require('../../assets/images/banner.jpg'),
     name: 'Anne Smith',
@@ -462,6 +462,11 @@ const styles = StyleSheet.create({
   modalButton: {
     fontSize: 16,
     color: '#41a425',
+  },
+  modalOption: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
   },
   bannerColumns: {
     height: 200,
