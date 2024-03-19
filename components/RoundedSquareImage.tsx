@@ -13,6 +13,7 @@ interface Props {
 
 const RoundedSquareImage: React.FC<Props> = ({ source, name, price, quantity, description, updateCartList }) => {
   const handleAddToCart = () => {
+    quantity = -1;
     const item: Listing = { id: Math.random().toString(), source, name, price, quantity, description };
     updateCartList(item);
   };

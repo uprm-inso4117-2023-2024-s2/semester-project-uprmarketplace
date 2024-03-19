@@ -24,10 +24,26 @@ export default function BrowseScreen() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const updateCartList = (listing: Listing) => {
+    data.forEach((value, idx) => {
+      if (value.name == listing.name) {
+        data[idx].quantity -= 1;
+        console.log({ data });
+      }
+    })
     setCartListings(prevListings => [...prevListings, listing]);
   };
 
   const removeItemFromCart = (id: string) => {
+    cartListings.forEach((v, i) => {
+      if (v.id == id) {
+        data.forEach((value, idx) => {
+          if (value.name == v.name) {
+            data[idx].quantity += 1;
+            console.log({ data });
+          }
+        })
+      }
+    })
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
@@ -50,7 +66,7 @@ export default function BrowseScreen() {
         <View style={styles.cartIconContainer}>
           <IconButton
             icon="cart"
-            color="#fff"
+            // color="#fff"
             size={25}
             onPress={() => setModalVisible(true)}
           />
@@ -85,7 +101,7 @@ export default function BrowseScreen() {
               <Text style={styles.modalTitle}>Cart</Text>
               <IconButton
                 icon="close"
-                color="#000"
+                // color="#000"
                 size={24}
                 onPress={() => setModalVisible(false)}
                 style={styles.closeButton}
@@ -102,7 +118,7 @@ export default function BrowseScreen() {
                 </View>
                 <IconButton
                   icon="delete"
-                  color="#000"
+                  // color="#000"
                   size={24}
                   onPress={() => removeItemFromCart(listing.id)}
                   style={styles.removeButton}
