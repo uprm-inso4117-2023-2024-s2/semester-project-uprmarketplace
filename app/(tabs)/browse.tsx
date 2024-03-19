@@ -47,6 +47,10 @@ export default function BrowseScreen() {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
+  const purchaseItemCart = (id: string) => {
+    setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
+  };
+
   const renderItem = ({ item }: { item: Listing }) => (
     <RoundedSquareImage
       source={item.source}
@@ -117,13 +121,22 @@ export default function BrowseScreen() {
                   <Text style={styles.price}>{listing.price}</Text>
                 </View>
                 <IconButton
+                  icon="check"
+                  // color="#000"
+                  size={24}
+                  onPress={() => purchaseItemCart(listing.id)}
+                  style={styles.removeButton}
+                />
+                <IconButton
                   icon="delete"
                   // color="#000"
                   size={24}
                   onPress={() => removeItemFromCart(listing.id)}
                   style={styles.removeButton}
                 />
+
               </View>
+
             ))}
           </View>
         </View>
