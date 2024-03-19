@@ -38,8 +38,8 @@ interface StudentData {
 
 const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
-    { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock' },
-    { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock' },
+    { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
+    { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
   const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
@@ -109,9 +109,60 @@ const PersonalStorefrontPage = () => {
         <TouchableOpacity onPress={() => openStatusModal(item)}>
           <Text style={styles.itemStatus}>{item.status}</Text>
         </TouchableOpacity>
+        {!item.pinned && (
+        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton}>
+          <Text style={styles.pinButtonText}>Pin</Text>
+        </TouchableOpacity>
+      )}
       </View>
     </View>
   );
+
+  const renderPinnedItem = ({ item }) => (
+    <View style={styles.itemContainer}>  
+      <Image source={item.itemImage} style={styles.itemImage} />
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.itemName}</Text>
+        <Text style={styles.itemPrice}>{item.itemPrice}</Text>  
+      </View>
+      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton}>
+        <Text style={styles.unpinButtonText}>Unpin</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const [pinnedItems, setPinnedItems] = useState([]);
+
+  const handlePinItem = (itemId) => {
+    const updatedUserItems = userItems.map(item => {
+      if (item.id === itemId) {
+        return { ...item, pinned: true };
+      }
+      return item;
+    });
+    setUserItems(updatedUserItems);
+    const itemToPin = userItems.find(item => item.id === itemId);
+    if (itemToPin) {
+      if (pinnedItems.length < 3) {
+        setPinnedItems([...pinnedItems, itemToPin]);
+      } else {
+        alert("You've reached your pin limit");
+      }
+    }
+  };
+  
+  const handleUnpinItem = (itemId) => {
+    const updatedUserItems = userItems.map(item => {
+      if (item.id === itemId) {
+        return { ...item, pinned: false };
+      }
+      return item;
+    });
+    setUserItems(updatedUserItems);
+    const updatedPinnedItems = pinnedItems.filter(item => item.id !== itemId);
+    setPinnedItems(updatedPinnedItems);
+  };
+
 
   return (
     <View style={styles.container}>
@@ -262,6 +313,13 @@ const PersonalStorefrontPage = () => {
           </View>
         </View>
       </Modal>
+
+      <Text style={styles.listingsHeading}>Pinned Listings</Text>
+      {pinnedItems.map(pinnedItem => (
+        <View key={pinnedItem.id}>
+          {renderPinnedItem({ item: pinnedItem })}
+        </View>
+      ))}
 
       <Text style={styles.listingsHeading}>Listings</Text>
       <FlatList
@@ -433,6 +491,34 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 16,
     marginBottom: 20,
+  },
+  pinButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#007bff',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  pinButtonText: {
+    color: '#fff',
+  },
+  unpinButton: {
+    flex: 1,
+    top: 0,
+    right: 0,
+    backgroundColor: '#b90e0a',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  unpinButtonText: {
+    color: '#fff',
   },
 });
 
