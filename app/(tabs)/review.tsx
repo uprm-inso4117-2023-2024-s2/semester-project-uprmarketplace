@@ -2,10 +2,16 @@ import React from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+// const renderStars = (rating) => {
+//   const filledStars = '★'.repeat(rating);
+//   const emptyStars = '☆'.repeat(5 - rating);
+//   return filledStars + emptyStars;
+// };
+
 const renderStars = (rating) => {
-  const filledStars = '★'.repeat(rating);
-  const emptyStars = '☆'.repeat(5 - rating);
-  return filledStars + emptyStars;
+  const filledStars = Array(rating).fill().map((_, i) => <Text key={i} style={{ color: 'yellow', fontSize: 20, textShadowColor: 'black', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 1 }}>★</Text>);
+  const emptyStars = Array(5 - rating).fill().map((_, i) => <Text key={rating + i} style={{ color: 'yellow', fontSize: 20, textShadowColor: 'black', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 1 }}>☆</Text>);
+  return [...filledStars, ...emptyStars];
 };
 
 const ReviewPage = () => {
@@ -37,7 +43,7 @@ const ReviewPage = () => {
       <Text style={styles.heading}>Reviews:</Text>
       {product.comments.map((comment, index) => (
         <View key={index} style={styles.commentContainer}>
-          <Text style={styles.comment}><FontAwesome name="commenting-o" size={24} color="black" />{" " + comment} {"|| Rating: "} {renderStars(review.commentRatings[index])}</Text>
+          <Text style={styles.comment}><FontAwesome name="commenting-o" size={24} color="green" />{" " + comment} {"|| Rating: "} {renderStars(review.commentRatings[index])}</Text>
         </View>
       ))}
       <View style={styles.commentBar}>
@@ -50,7 +56,7 @@ const ReviewPage = () => {
         <MaterialIcons 
           name="add-comment" 
           size={24} 
-          color="black"
+          color="green"
         />
       </View>
     </ScrollView>
@@ -109,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewPage;
+export default ReviewPage;
