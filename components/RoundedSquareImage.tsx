@@ -3,21 +3,22 @@ import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 interface Props {
-  source: any;
+  source: string;
   name: string;
-  price: string;
+  price: number;
   description: string;
   updateCartList: (item: Listing) => void;
+  onPress: () => void; // Add this line
 }
 
-const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList }) => {
+const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList, onPress }) => {
   const handleAddToCart = () => {
     const item: Listing = { id: Math.random().toString(), source, name, price, description };
     updateCartList(item);
   };
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}> {/* Use onPress here */}
       <View style={styles.imageContainer}>
         <Image source={source} style={styles.image} />
       </View>
@@ -35,7 +36,6 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
