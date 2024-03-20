@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, FlatList, Modal, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, Modal, Text, Image, TouchableOpacity } from 'react-native';
 import { IconButton, Badge } from 'react-native-paper';
 import RoundedSquareImage from '@/components/RoundedSquareImage';
+import Autocomplete from 'react-native-autocomplete-input';
 
 interface Listing {
   id: string;
@@ -20,6 +21,15 @@ const data: Listing[] = [
 export default function BrowseScreen() {
   const [cartListings, setCartListings] = useState<Listing[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [query, setQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState<Listing | null>(null);
+
+  const findData = (query: string) => {
+    if (query === '') {
+      return [];
+    }
+    return data.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
+  };
 
   const updateCartList = (listing: Listing) => {
     setCartListings(prevListings => [...prevListings, listing]);
@@ -29,15 +39,21 @@ export default function BrowseScreen() {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
-  const renderItem = ({ item }: { item: Listing }) => (
-    <RoundedSquareImage
-      source={item.source}
-      name={item.name}
-      price={item.price}
-      description={item.description}
-      updateCartList={updateCartList}
-    />
-  );
+  const renderItem = ({ item }: { item: Listing }) => {
+    if (selectedItem && selectedItem.id !== item.id) {
+      return null; // Hide items that don't match the selected tag
+    }
+
+    return (
+      <RoundedSquareImage
+        source={item.source}
+        name={item.name}
+        price={item.price}
+        description={item.description}
+        updateCartList={updateCartList}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -56,13 +72,16 @@ export default function BrowseScreen() {
           )}
         </View>
       </View>
-      <View style={styles.searchBar}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search for products near you..."
-          placeholderTextColor="#888"
-        />
-      </View>
+      <Autocomplete
+        data={findData(query)}
+        defaultValue={query}
+        onChangeText={text => setQuery(text)}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => setSelectedItem(item)}>
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -88,7 +107,7 @@ export default function BrowseScreen() {
                 style={styles.closeButton}
               />
             </View>
-            {cartListings.map(listing => (
+            {data.map(listing => (
               <View style={styles.cartItem} key={listing.id}>
                 <View style={styles.imageContainer}>
                   <Image source={listing.source} style={styles.image} />
@@ -112,6 +131,7 @@ export default function BrowseScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
