@@ -9,17 +9,21 @@ interface Listing {
   name: string;
   price: string;
   description: string;
+  condition: string;
 }
 
 const data: Listing[] = [
-  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.' },
-  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez' },
-  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948' },
+  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.', condition: 'Buenas', },
+  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez', condition: 'Nueva', },
+  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948', condition: 'Usada', },
 ];
 
 export default function BrowseScreen() {
   const [cartListings, setCartListings] = useState<Listing[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+
 
   const updateCartList = (listing: Listing) => {
     setCartListings(prevListings => [...prevListings, listing]);
@@ -29,26 +33,38 @@ export default function BrowseScreen() {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
+  const showDetailModal = (listing: Listing) => {
+    setSelectedListing(listing);
+    setDetailModalVisible(true);
+    console.log('showDetailModal', listing);
+  };
+
   const renderItem = ({ item }: { item: Listing }) => (
-    <RoundedSquareImage
-      source={item.source}
-      name={item.name}
-      price={item.price}
-      description={item.description}
-      updateCartList={updateCartList}
-    />
+    <TouchableOpacity onPress={() => showDetailModal(item)} testID={`item-${item.id}`}>
+      <RoundedSquareImage
+        source={item.source}
+        name={item.name}
+        price={item.price}
+        description={item.description}
+        updateCartList={updateCartList}
+        onPress={() => showDetailModal(item)}
+      />
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         {/* Render the title here */}
-        <Text style={styles.title}> </Text>
+        <TouchableOpacity onPress={() => showDetailModal(data[0])}>
+          <Text style={styles.title}>Title</Text>
+        </TouchableOpacity>
         <View style={styles.cartIconContainer}>
           <IconButton
             icon="cart"
             color="#fff"
             size={25}
+            testID="cart-icon"
             onPress={() => setModalVisible(true)}
           />
           {cartListings.length > 0 && (
@@ -69,6 +85,39 @@ export default function BrowseScreen() {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.flatListContent}
       />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={detailModalVisible}
+        onRequestClose={() => setDetailModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{selectedListing?.name}</Text>
+              <IconButton
+                icon="close"
+                color="#000"
+                size={24}
+                onPress={() => setDetailModalVisible(false)}
+                style={styles.closeButton}
+              />
+            </View>
+            <View style={{flexDirection:"row"}}>
+              {selectedListing && <Image source={selectedListing.source} style={styles.imagepopup} />}
+              <View style={{marginLeft:5, paddingLeft:5}}>
+                <Text style={styles.topicTitle}>Description</Text>
+                <Text style={{fontSize: 20}}>{selectedListing?.description}</Text>
+                <Text style={styles.topicTitle}>Price</Text>
+                <Text style={{fontSize: 20}}>{selectedListing?.price}</Text>
+                <Text style={styles.topicTitle}>Conditions</Text>
+                <Text style={{fontSize: 20}}>{selectedListing?.condition}</Text>
+            </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         animationType="slide"
@@ -214,5 +263,13 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginLeft: 'auto',
+  },
+  imagepopup: {
+    width: 500,
+    height: 500,
+  },
+  topicTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
