@@ -574,8 +574,8 @@ const styles = StyleSheet.create({
   },
   categoryButtonContainer: {
     position: 'absolute',
-    left: 85,
-    top: 303,
+    left: 200,
+    top: 256,
     zIndex: 1,
   },
 });
