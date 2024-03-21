@@ -110,7 +110,7 @@ const PersonalStorefrontPage = () => {
           <Text style={styles.itemStatus}>{item.status}</Text>
         </TouchableOpacity>
         {!item.pinned && (
-        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton}>
+        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton} testID={"pinButton-" + item.id}>
           <Text style={styles.pinButtonText}>Pin</Text>
         </TouchableOpacity>
       )}
@@ -125,7 +125,7 @@ const PersonalStorefrontPage = () => {
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>  
       </View>
-      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton}>
+      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton} testID = "unpinButton">
         <Text style={styles.unpinButtonText}>Unpin</Text>
       </TouchableOpacity>
     </View>
@@ -173,6 +173,7 @@ const PersonalStorefrontPage = () => {
           color="#fff"
           size={25}
           onPress={() => setBannerModalVisible(true)}
+          testID='profileBannerIcon'
         />
       </View>
       <View style={styles.profileContainer}>
@@ -183,6 +184,7 @@ const PersonalStorefrontPage = () => {
             color="#fff"
             size={25}
             onPress={() => setProfilePicModalVisible(true)}
+            testID='profilePictureIcon'
             style={styles.profilePictureIconContainer}
           />
         </View>
@@ -194,6 +196,7 @@ const PersonalStorefrontPage = () => {
               color="#fff"
               size={20}
               onPress={() => setNameModalVisible(true)}
+              testID='editButton'
             />
           </View>
           <Text style={styles.profileStatus}>{userData.status}</Text>
@@ -222,7 +225,7 @@ const PersonalStorefrontPage = () => {
               <TouchableOpacity onPress={() => setNameModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { updateName(newName); }}>
+              <TouchableOpacity onPress={() => { updateName(newName); }} testID='saveButton'>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
