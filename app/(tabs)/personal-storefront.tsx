@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pinButton: {
-    position: 'absolute',
+    flex: 1,
     top: 0,
     right: 0,
     backgroundColor: '#007bff',
