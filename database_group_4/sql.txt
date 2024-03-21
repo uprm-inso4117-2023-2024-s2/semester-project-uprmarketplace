@@ -1,19 +1,19 @@
-create schema if not exists UPRM_Marketplace;
---- Table creation for review page
-create table if not exists UPRM_Marketplace.product(
+create schema if not exists marketplacedb;
+
+create table if not exists marketplacedb.product(
     pid integer NOT NULL, primary key(pid),
     name varchar(64),
     price integer,
     description varchar(255));
 
-create table if not exists UPRM_Marketplace.reviews(
+create table if not exists marketplacedb.reviews(
     rid integer primary key,
     comment_date date,
     rating integer, content varchar(500),
     pid integer,
-    foreign key(pid) references UPRM_Marketplace.product(pid));
+    foreign key(pid) references marketplacedb.product(pid));
 
-create table if not exists UPRM_Marketplace.user(
+create table if not exists marketplacedb.user(
     uid integer, primary key (uid),
     first_name varchar(64), last_name varchar(64),
     userName varchar(64),
