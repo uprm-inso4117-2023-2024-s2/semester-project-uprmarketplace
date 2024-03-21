@@ -40,7 +40,7 @@ export default function BrowseScreen() {
   };
 
   const renderItem = ({ item }: { item: Listing }) => (
-    <TouchableOpacity onPress={() => showDetailModal(item)}>
+    <TouchableOpacity onPress={() => showDetailModal(item)} testID={`item-${item.id}`}>
       <RoundedSquareImage
         source={item.source}
         name={item.name}
@@ -64,6 +64,7 @@ export default function BrowseScreen() {
             icon="cart"
             color="#fff"
             size={25}
+            testID="cart-icon"
             onPress={() => setModalVisible(true)}
           />
           {cartListings.length > 0 && (
