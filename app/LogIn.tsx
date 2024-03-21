@@ -179,7 +179,7 @@ export default function LogIn() {
       </Text>
       <Text
         style={styles.forgotPass}
-        onPress={() => console.log("Forgot Password?")}
+        onPress={() => router.navigate('ForgotPass')}
       >
         Forgot Password?
       </Text>
