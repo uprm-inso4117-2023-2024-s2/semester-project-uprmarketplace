@@ -1,0 +1,7 @@
+
+on terminal run:
+    docker pull mysql
+    luego 
+    docker run --name uprm-marketplace -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=rootUser -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=marketplacedb -p 3306:3306 -d mysql:latest
+abre datagrip y crea una add a new data source like en el pdf de postgres pero para mysql, y las configuraciones son las que estan en el screenshot en el folder
+luego de eso vas a poder subir data corriendo el script en load-data.py
