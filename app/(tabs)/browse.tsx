@@ -55,7 +55,6 @@ export default function BrowseScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* Render the title here */}
         <TouchableOpacity onPress={() => showDetailModal(data[0])}>
           <Text style={styles.title}>Title</Text>
         </TouchableOpacity>

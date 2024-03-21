@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
-import Browse from './browse';
+import Browse from '../app/(tabs)/browse';
 
 describe('Browse component', () => {
   it('should display the modal with the correct information when an item is selected', () => {
