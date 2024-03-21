@@ -17,6 +17,8 @@ const data: Listing[] = [
   { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.', quantity: 2 },
   { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez', quantity: 0 },
   { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948', quantity: 3 },
+  { id: '4', source: require('../../assets/images/image4.jpg') , name: 'Lab Coat', price: '$50', description: "", quantity: 1},
+  { id: '5',  source: require('../../assets/images/image5.jpg') ,name: 'Lab Goggles', price: '$15', description: "", quantity: 1},
 ];
 
 export default function BrowseScreen() {
@@ -50,6 +52,12 @@ export default function BrowseScreen() {
   const purchaseItemCart = (id: string) => {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
+
+  const purchaseAllCart = (sizeOfCart) => {
+    for(let i = 0; i < sizeOfCart; i++){
+      purchaseItemCart(cartListings[i].id)
+    }
+  }
 
   const renderItem = ({ item }: { item: Listing }) => (
     <RoundedSquareImage
@@ -103,6 +111,16 @@ export default function BrowseScreen() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Cart</Text>
+              <IconButton
+                icon="delete"
+                // color="#000"
+                size={24}
+                onPress={() => purchaseAllCart(cartListings.length)}
+                style={styles.buyAllButton}
+              />
+                <Text style={styles.modalTrashCan}>Delete all</Text>
+
+            
               <IconButton
                 icon="close"
                 // color="#000"
@@ -247,6 +265,16 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     marginLeft: 'auto',
+  },
+  modalTrashCan: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  buyAllButton: {
+    marginLeft: 'auto',
+    marginBottom: '15px'
   },
   closeButton: {
     marginLeft: 'auto',
