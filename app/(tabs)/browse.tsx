@@ -64,6 +64,7 @@ export default function BrowseScreen() {
             icon="cart"
             color="#fff"
             size={25}
+            testID="cart-icon"
             onPress={() => setModalVisible(true)}
           />
           {cartListings.length > 0 && (
