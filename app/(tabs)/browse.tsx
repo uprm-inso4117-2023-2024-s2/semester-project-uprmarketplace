@@ -55,7 +55,6 @@ export default function BrowseScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* Render the title here */}
         <TouchableOpacity onPress={() => showDetailModal(data[0])}>
           <Text style={styles.title}>Title</Text>
         </TouchableOpacity>
@@ -91,6 +90,7 @@ export default function BrowseScreen() {
         transparent={true}
         visible={detailModalVisible}
         onRequestClose={() => setDetailModalVisible(false)}
+        testID="detail-modal"
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -102,17 +102,20 @@ export default function BrowseScreen() {
                 size={24}
                 onPress={() => setDetailModalVisible(false)}
                 style={styles.closeButton}
+                testID="close-button"
               />
             </View>
             <View style={{flexDirection:"row"}}>
               {selectedListing && <Image source={selectedListing.source} style={styles.imagepopup} />}
               <View style={{marginLeft:5, paddingLeft:5}}>
+                <Text style={styles.topicTitle}>Name</Text>
+                <Text style={{fontSize: 20}} testID="modal-title">{selectedListing?.name}</Text>
                 <Text style={styles.topicTitle}>Description</Text>
-                <Text style={{fontSize: 20}}>{selectedListing?.description}</Text>
+                <Text style={{fontSize: 20}} testID="modal-description">{selectedListing?.description}</Text>
                 <Text style={styles.topicTitle}>Price</Text>
-                <Text style={{fontSize: 20}}>{selectedListing?.price}</Text>
+                <Text style={{fontSize: 20}} testID="modal-price">{selectedListing?.price}</Text>
                 <Text style={styles.topicTitle}>Conditions</Text>
-                <Text style={{fontSize: 20}}>{selectedListing?.condition}</Text>
+                <Text style={{fontSize: 20}} testID="modal-condition">{selectedListing?.condition}</Text>
             </View>
             </View>
           </View>
