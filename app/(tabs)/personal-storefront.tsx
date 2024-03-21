@@ -65,13 +65,6 @@ const PersonalStorefrontPage = () => {
   const [newStatus, setNewStatus] = useState('');
   const [isCategoryModalVisible, setCategoryModalVisible] = useState(false);
 
-  const toggleCategoryModal = () => {
-    setCategoryModalVisible(!isCategoryModalVisible);
-  };
-  const categorySelectionHandler = (category) => {
-    setSelectedCategory(category === selectedCategory ? null : category);
-    setCategoryModalVisible(false);
-  }
   const renderCategories = () => {
     return allowedCategories.map((category, index) => (
         <TouchableOpacity key={index} style={styles.categoryItem} onPress={() => categorySelectionHandler(category)}>
@@ -79,6 +72,13 @@ const PersonalStorefrontPage = () => {
         </TouchableOpacity>
     ));
   };
+  const toggleCategoryModal = () => {
+    setCategoryModalVisible(!isCategoryModalVisible);
+  };
+  const categorySelectionHandler = (category) => {
+    setSelectedCategory(category === selectedCategory ? null : category);
+    setCategoryModalVisible(false);
+  }
   const updateName = (newName) => {
     if (newName === '') {
       setError('Name cannot be empty');
@@ -115,14 +115,33 @@ const PersonalStorefrontPage = () => {
     setStatusModalVisible(false);
   };
 
-  const renderPinnedItem = ({ item }) => (
+  const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Image source={item.itemImage} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
+        <Text style={styles.category}>{item.category}</Text>
+        <TouchableOpacity onPress={() => openStatusModal(item)}>
+          <Text style={styles.itemStatus}>{item.status}</Text>
+        </TouchableOpacity>
+        {!item.pinned && (
+        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton} testID={"pinButton-" + item.id}>
+          <Text style={styles.pinButtonText}>Pin</Text>
+        </TouchableOpacity>
+      )}
       </View>
-      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton}>
+    </View>
+  );
+
+  const renderPinnedItem = ({ item }) => (
+    <View style={styles.itemContainer}>  
+      <Image source={item.itemImage} style={styles.itemImage} />
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.itemName}</Text>
+        <Text style={styles.itemPrice}>{item.itemPrice}</Text>  
+      </View>
+      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton} testID = "unpinButton">
         <Text style={styles.unpinButtonText}>Unpin</Text>
       </TouchableOpacity>
     </View>
@@ -147,7 +166,7 @@ const PersonalStorefrontPage = () => {
       }
     }
   };
-
+  
   const handleUnpinItem = (itemId) => {
     const updatedUserItems = userItems.map(item => {
       if (item.id === itemId) {
@@ -159,24 +178,7 @@ const PersonalStorefrontPage = () => {
     const updatedPinnedItems = pinnedItems.filter(item => item.id !== itemId);
     setPinnedItems(updatedPinnedItems);
   };
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Image source={item.itemImage} style={styles.itemImage} />
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.itemName}</Text>
-        <Text style={styles.itemPrice}>{item.itemPrice}</Text>
-        <Text style={styles.category}>{item.category}</Text>
-        <TouchableOpacity onPress={() => openStatusModal(item)}>
-          <Text style={styles.itemStatus}>{item.status}</Text>
-        </TouchableOpacity>
-        {!item.pinned && (
-        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton}>
-          <Text style={styles.pinButtonText}>Pin</Text>
-        </TouchableOpacity>
-      )}
-      </View>
-    </View>
-  );
+
 
   return (
     <View style={styles.container}>
@@ -187,9 +189,9 @@ const PersonalStorefrontPage = () => {
           color="#fff"
           size={25}
           onPress={() => setBannerModalVisible(true)}
+          testID='profileBannerIcon'
         />
       </View>
-
       <View style={styles.profileContainer}>
         <View style={styles.profilePictureAndIconContainer}>
           <Image source={userData.profilePicture} style={styles.profilePicture} />
@@ -198,6 +200,7 @@ const PersonalStorefrontPage = () => {
             color="#fff"
             size={25}
             onPress={() => setProfilePicModalVisible(true)}
+            testID='profilePictureIcon'
             style={styles.profilePictureIconContainer}
           />
         </View>
@@ -209,6 +212,7 @@ const PersonalStorefrontPage = () => {
               color="#fff"
               size={20}
               onPress={() => setNameModalVisible(true)}
+              testID='editButton'
             />
           </View>
           <Text style={styles.profileStatus}>{userData.status}</Text>
@@ -237,7 +241,7 @@ const PersonalStorefrontPage = () => {
               <TouchableOpacity onPress={() => setNameModalVisible(false)}>
                 <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { updateName(newName); }}>
+              <TouchableOpacity onPress={() => { updateName(newName); }} testID='saveButton'>
                 <Text style={styles.modalButton}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -541,7 +545,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pinButton: {
-    position: 'absolute',
+    flex: 1,
     top: 0,
     right: 0,
     backgroundColor: '#007bff',
@@ -570,8 +574,8 @@ const styles = StyleSheet.create({
   },
   categoryButtonContainer: {
     position: 'absolute',
-    left: 87,
-    top: 305,
+    left: 85,
+    top: 303,
     zIndex: 1,
   },
 });
