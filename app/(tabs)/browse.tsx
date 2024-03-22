@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, FlatList, Modal, Text, Image, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, TextInput, View, FlatList, Modal, Text, Image, Pressable  } from 'react-native';
 import { IconButton, Badge } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import RoundedSquareImage from '@/components/RoundedSquareImage';
 
 interface Listing {
@@ -29,6 +31,19 @@ export default function BrowseScreen() {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
+  const navigation = useNavigation();
+
+
+  const storeProductId = async (id: string) => {
+    try {
+      console.log("Storing product ID:", id);
+      await AsyncStorage.setItem('selectedProductId', id);
+      navigation.navigate('review');
+    } catch (error) {
+      console.error('Error storing product ID:', error);
+    }
+  };
+
   const renderItem = ({ item }: { item: Listing }) => (
     <RoundedSquareImage
       source={item.source}
@@ -36,6 +51,7 @@ export default function BrowseScreen() {
       price={item.price}
       description={item.description}
       updateCartList={updateCartList}
+      onPress={() => storeProductId(item.id)}
     />
   );
 

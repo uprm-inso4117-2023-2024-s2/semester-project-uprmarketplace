@@ -8,16 +8,17 @@ interface Props {
   price: string;
   description: string;
   updateCartList: (item: Listing) => void;
+  onPress: () => void;
 }
 
-const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList }) => {
+const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList, onPress }) => {
   const handleAddToCart = () => {
     const item: Listing = { id: Math.random().toString(), source, name, price, description };
     updateCartList(item);
   };
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
         <Image source={source} style={styles.image} />
       </View>

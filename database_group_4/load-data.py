@@ -12,7 +12,7 @@ config_db={
     'user':'root',
     'password':'password',
     'host':"localhost",
-    'database':'UPRM_Marketplace',
+    'database':'marketplacedb',
     'port':3306
 }
 
@@ -54,9 +54,9 @@ print("Processing data now,please wait...")
 cursor = connection.cursor()
 
 try:
-    import_csv_to_mysql('database_group_4/data/user.csv', 'UPRM_Marketplace.user', cursor)
-    import_csv_to_mysql('database_group_4/data/product.csv', 'UPRM_Marketplace.product', cursor)
-    import_csv_to_mysql('database_group_4/data/reviews.csv', 'UPRM_Marketplace.reviews', cursor)
+    import_csv_to_mysql('database_group_4/data/user.csv', 'marketplacedb.user', cursor)
+    import_csv_to_mysql('database_group_4/data/product.csv', 'marketplacedb.product', cursor)
+    import_csv_to_mysql('database_group_4/data/reviews.csv', 'marketplacedb.reviews', cursor)
 
     connection.commit()
 
@@ -71,7 +71,3 @@ finally:
         print("MySQL connection is closed")
 
 print("Data uploaded successfully")
-
-
-
-
