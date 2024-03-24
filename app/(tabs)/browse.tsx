@@ -53,7 +53,7 @@ export default function BrowseScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="browse-screen">
       <View style={styles.header}>
         <TouchableOpacity onPress={() => showDetailModal(data[0])}>
           <Text style={styles.title}>Title</Text>
@@ -67,7 +67,7 @@ export default function BrowseScreen() {
             onPress={() => setModalVisible(true)}
           />
           {cartListings.length > 0 && (
-            <Badge style={styles.badge}>{cartListings.length}</Badge>
+            <Badge style={styles.badge} testID={'cart-badge'}>{cartListings.length}</Badge>
           )}
         </View>
       </View>
@@ -127,6 +127,7 @@ export default function BrowseScreen() {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
+        testID='cart-modal'
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

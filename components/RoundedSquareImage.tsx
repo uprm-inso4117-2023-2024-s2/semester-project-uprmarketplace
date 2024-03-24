@@ -8,7 +8,7 @@ interface Props {
   price: number;
   description: string;
   updateCartList: (item: Listing) => void;
-  onPress: () => void; // Add this line
+  onPress: () => void;
 }
 
 const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList, onPress }) => {
@@ -18,7 +18,7 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}> {/* Use onPress here */}
+    <TouchableOpacity style={styles.container} onPress={onPress}> {}
       <View style={styles.imageContainer}>
         <Image source={source} style={styles.image} />
       </View>
@@ -32,6 +32,7 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
         color="#000"
         size={24}
         onPress={handleAddToCart}
+        testID={`add-to-cart-button-${name}`}
       />
     </TouchableOpacity>
   );
