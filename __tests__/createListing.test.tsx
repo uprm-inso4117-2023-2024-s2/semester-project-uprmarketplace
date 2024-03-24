@@ -11,16 +11,13 @@ test('Creating a listing with empty values should fail', () => {
     const conditionInput = getByTestId('condition-dropdown');
     const submitButton = getByText('Create Listing');
     
-    // Clear the input fields
     fireEvent.changeText(titleInput, '');
     fireEvent.changeText(descriptionInput, '');
     fireEvent.changeText(priceInput, '');
     fireEvent.changeText(conditionInput, '');
     
-    // Click the submit button
     fireEvent.press(submitButton);
     
-    // Assert that alert was called
     expect(global.alert).toHaveBeenCalledWith('Please fill out all fields.');
 });
 
