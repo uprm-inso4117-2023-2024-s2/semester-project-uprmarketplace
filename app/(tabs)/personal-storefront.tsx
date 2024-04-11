@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView, ImageBackground } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 const renderStars = (rating) => {
@@ -7,6 +7,8 @@ const renderStars = (rating) => {
   const emptyStars = '☆'.repeat(5 - rating);
   return filledStars + emptyStars;
 };
+
+const backgroundImage = require('../../assets/images/storefront_background.avif');
 
 // Hardcoded banners to test
 const banners = [
@@ -181,13 +183,14 @@ const PersonalStorefrontPage = () => {
 
 
   return (
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
     <View style={styles.container}>
       <Image source={userData.profileBanner} style={styles.profileBanner} />
       <View style={styles.profileBannerIconContainer}>
         <IconButton
-          icon="brush"
-          color="#fff"
-          size={25}
+          icon="palette-outline"
+          iconColor="white"
+          size={30}
           onPress={() => setBannerModalVisible(true)}
           testID='profileBannerIcon'
         />
@@ -196,8 +199,8 @@ const PersonalStorefrontPage = () => {
         <View style={styles.profilePictureAndIconContainer}>
           <Image source={userData.profilePicture} style={styles.profilePicture} />
           <IconButton
-            icon="image-edit"
-            color="#fff"
+            icon="image-edit-outline"
+            iconColor="white"
             size={25}
             onPress={() => setProfilePicModalVisible(true)}
             testID='profilePictureIcon'
@@ -208,8 +211,8 @@ const PersonalStorefrontPage = () => {
           <View style={styles.profileNameAndIconContainer}>
             <Text style={styles.profileName}>{userData.name}</Text>
             <IconButton
-              icon="pencil"
-              color="#fff"
+              icon="pencil-outline"
+              iconColor="white"
               size={20}
               onPress={() => setNameModalVisible(true)}
               testID='editButton'
@@ -351,8 +354,8 @@ const PersonalStorefrontPage = () => {
       {/* Category Button */}
       <View style={styles.categoryButtonContainer}>
         <IconButton
-          icon="filter"
-          color="#fff"
+          icon="filter-outline"
+          iconColor="white"
           size={25}
           onPress={() => toggleCategoryModal()}
         />
@@ -376,10 +379,16 @@ const PersonalStorefrontPage = () => {
         </View>
       </Modal>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'flex-start',
@@ -426,6 +435,7 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'white',
   },
   profileNameAndIconContainer: {
     flexDirection: 'row',
@@ -434,15 +444,17 @@ const styles = StyleSheet.create({
   },
   profileStatus: {
     fontSize: 16,
-    color: '#888',
+    color: 'lightgray',
   },
   profileRatings: {
     fontSize: 20,
+    color: 'yellow',
   },
   listingsHeading: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'white',
   },
   itemList: {
     width: '100%',
@@ -455,8 +467,10 @@ const styles = StyleSheet.create({
   itemImage: {
     width: 80,
     height: 80,
+    borderWidth: 2,
     borderRadius: 8,
     marginRight: 15,
+    borderColor: 'white',
   },
   itemDetails: {
     flex: 1,
@@ -464,18 +478,19 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white',
   },
   itemPrice: {
     fontSize: 14,
-    color: '#888',
+    color: 'white',
   },
   category: {
     fontSize: 14,
-    color: '#888',
+    color: 'white',
   },
   itemStatus: {
     fontSize: 14,
-    color: '#888',
+    color: 'white',
   },
   modalContainer: {
     flex: 1,
@@ -512,8 +527,11 @@ const styles = StyleSheet.create({
   },
   modalOption: {
     fontSize: 16,
-    color: '#333',
-    marginBottom: 15,
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   bannerColumns: {
     height: 200,
@@ -525,6 +543,8 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'cover',
     borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#f0f0f0',
     marginBottom: 20,
   },
   pictureRow: {
@@ -536,6 +556,8 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: 'cover',
     borderRadius: 50,
+    borderWidth: 2,
+    borderColor: '#f0f0f0',
     marginRight: 20,
     marginBottom: 20,
   },
@@ -548,7 +570,7 @@ const styles = StyleSheet.create({
     flex: 1,
     top: 0,
     right: 0,
-    backgroundColor: '#007bff',
+    backgroundColor: 'limegreen',
     width: 30,
     height: 30,
     justifyContent: 'center',
@@ -562,7 +584,7 @@ const styles = StyleSheet.create({
     flex: 1,
     top: 0,
     right: 0,
-    backgroundColor: '#b90e0a',
+    backgroundColor: 'green',
     width: 30,
     height: 30,
     justifyContent: 'center',
@@ -577,6 +599,16 @@ const styles = StyleSheet.create({
     left: 200,
     top: 256,
     zIndex: 1,
+  },
+  categoryItem: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  categoryText: {
+    fontSize: 16,
   },
 });
 
