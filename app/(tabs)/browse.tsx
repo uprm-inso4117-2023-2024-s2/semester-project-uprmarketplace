@@ -24,7 +24,6 @@ export default function BrowseScreen() {
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
 
-
   const updateCartList = (listing: Listing) => {
     setCartListings(prevListings => [...prevListings, listing]);
   };
@@ -59,13 +58,16 @@ export default function BrowseScreen() {
           <Text style={styles.title}>Title</Text>
         </TouchableOpacity>
         <View style={styles.cartIconContainer}>
-          <IconButton
-            icon="cart"
-            color="#fff"
-            size={25}
-            testID="cart-icon"
-            onPress={() => setModalVisible(true)}
-          />
+          <View style={styles.cartIconWrapper}>
+            <IconButton
+              icon="cart"
+              color="#fff"
+              size={25}
+              testID="cart-icon"
+              onPress={() => setModalVisible(true)}
+              style={styles.cartIcon}
+            />
+          </View>
           {cartListings.length > 0 && (
             <Badge style={styles.badge} testID={'cart-badge'}>{cartListings.length}</Badge>
           )}
@@ -105,18 +107,18 @@ export default function BrowseScreen() {
                 testID="close-button"
               />
             </View>
-            <View style={{flexDirection:"row"}}>
+            <View style={{ flexDirection: "row" }}>
               {selectedListing && <Image source={selectedListing.source} style={styles.imagepopup} />}
-              <View style={{marginLeft:5, paddingLeft:5}}>
+              <View style={{ marginLeft: 5, paddingLeft: 5 }}>
                 <Text style={styles.topicTitle}>Name</Text>
-                <Text style={{fontSize: 20}} testID="modal-title">{selectedListing?.name}</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-title">{selectedListing?.name}</Text>
                 <Text style={styles.topicTitle}>Description</Text>
-                <Text style={{fontSize: 20}} testID="modal-description">{selectedListing?.description}</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-description">{selectedListing?.description}</Text>
                 <Text style={styles.topicTitle}>Price</Text>
-                <Text style={{fontSize: 20}} testID="modal-price">{selectedListing?.price}</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-price">{selectedListing?.price}</Text>
                 <Text style={styles.topicTitle}>Conditions</Text>
-                <Text style={{fontSize: 20}} testID="modal-condition">{selectedListing?.condition}</Text>
-            </View>
+                <Text style={{ fontSize: 20 }} testID="modal-condition">{selectedListing?.condition}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -171,6 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 40,
+    backgroundColor: '#F0F0F0',
   },
   header: {
     flexDirection: 'row',
@@ -196,6 +199,22 @@ const styles = StyleSheet.create({
     top: -5,
     right: -5,
   },
+  cartIconWrapper: {
+    borderRadius: 25, 
+    backgroundColor: '#F5F5F5',
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  cartIcon: {
+    zIndex: 1,
+  },
   
   searchBar: {
     width: '90%',
@@ -204,6 +223,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   input: {
     fontSize: 16,
@@ -225,6 +252,14 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '80%',
     maxHeight: '80%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -277,3 +312,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
