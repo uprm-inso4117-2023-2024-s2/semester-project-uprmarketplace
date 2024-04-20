@@ -50,6 +50,9 @@ export default function BrowseScreen() {
       />
     </TouchableOpacity>
   );
+  const clearCart = () => {
+    setCartListings([]);
+  };
 
   return (
     <View style={styles.container} testID="browse-screen">
@@ -86,7 +89,6 @@ export default function BrowseScreen() {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.flatListContent}
       />
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -123,47 +125,50 @@ export default function BrowseScreen() {
           </View>
         </View>
       </Modal>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        testID='cart-modal'
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Cart</Text>
-              <IconButton
-                icon="close"
-                color="#000"
-                size={24}
-                onPress={() => setModalVisible(false)}
-                style={styles.closeButton}
-              />
-            </View>
-            {cartListings.map(listing => (
-              <View style={styles.cartItem} key={listing.id}>
-                <View style={styles.imageContainer}>
-                  <Image source={listing.source} style={styles.image} />
-                </View>
-                <View style={styles.details}>
-                  <Text style={styles.name}>{listing.name}</Text>
-                  <Text style={styles.price}>{listing.price}</Text>
-                </View>
-                <IconButton
-                  icon="delete"
-                  color="#000"
-                  size={24}
-                  onPress={() => removeItemFromCart(listing.id)}
-                  style={styles.removeButton}
-                />
-              </View>
-            ))}
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => setModalVisible(false)}
+  testID='cart-modal'
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <View style={styles.modalHeader}>
+        <Text style={styles.modalTitle}>Cart</Text>
+        <IconButton
+          icon="close"
+          color="#000"
+          size={24}
+          onPress={() => setModalVisible(false)}
+          style={styles.closeButton}
+        />
+      </View>
+      {cartListings.map(listing => (
+        <View style={styles.cartItem} key={listing.id}>
+          <View style={styles.imageContainer}>
+            <Image source={listing.source} style={styles.image} />
           </View>
+          <View style={styles.details}>
+            <Text style={styles.name}>{listing.name}</Text>
+            <Text style={styles.price}>{listing.price}</Text>
+          </View>
+          <IconButton
+            icon="delete"
+            color="#000"
+            size={24}
+            onPress={() => removeItemFromCart(listing.id)}
+            style={styles.deleteButton}
+          />
         </View>
-      </Modal>
+      ))}
+      
+      <TouchableOpacity onPress={clearCart} style={styles.clearCartButton}>
+        <Text style={styles.clearCartButtonText}>Clear</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </View>
   );
 }
@@ -304,12 +309,30 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   imagepopup: {
-    width: 500,
-    height: 500,
+    width: 150,
+    height: 150,
   },
   topicTitle: {
     fontSize: 18,
     fontWeight: 'bold',
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deleteButton: {
+    marginRight: 10,
+  },
+  clearCartButton: {
+    backgroundColor: '#FF5733',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  clearCartButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
-
