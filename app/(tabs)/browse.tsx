@@ -58,7 +58,7 @@ export default function BrowseScreen() {
     <View style={styles.container} testID="browse-screen">
       <View style={styles.header}>
         <TouchableOpacity onPress={() => showDetailModal(data[0])}>
-          <Text style={styles.title}>Title</Text>
+          <Text style={styles.title}>Browse</Text>
         </TouchableOpacity>
         <View style={styles.cartIconContainer}>
           <View style={styles.cartIconWrapper}>

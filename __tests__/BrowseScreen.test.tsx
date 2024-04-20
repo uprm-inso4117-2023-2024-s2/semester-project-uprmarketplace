@@ -6,7 +6,7 @@ describe('BrowseScreen', () => {
   test('renders correctly', () => {
     const { getByText, getByPlaceholderText } = render(<BrowseScreen />);
     
-    expect(getByText('Title')).toBeTruthy();
+    expect(getByText('Browse')).toBeTruthy();
 
     expect(getByPlaceholderText('Search for products near you...')).toBeTruthy();
   });
