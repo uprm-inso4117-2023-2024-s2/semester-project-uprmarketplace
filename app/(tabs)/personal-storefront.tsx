@@ -42,6 +42,8 @@ const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
     { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
     { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
+    { id: '3', itemName: 'Lab Coat', itemPrice: '$50', category: 'Book', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
+    { id: '4', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Tools', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
   const [selectedCategory, setSelectedCategory] = useState(null);
