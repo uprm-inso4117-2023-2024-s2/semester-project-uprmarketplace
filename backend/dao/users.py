@@ -18,6 +18,22 @@ class userDAO:
         for row in cursor:
             result.append(row)
         return result
+    
+    def getUserByEmail(self, email):
+        query = "select * from users where email = %s"
+        cursor = self.conn.cursor()
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()
+        if result is None:
+            return 0
+        else:
+            return result
+        
+    def changePassword(self, userid, password):
+        query = "update users set password = %s where id = %s"
+        cursor = self.conn.cursor()
+        cursor.execute(query, (password, userid,))
+        self.conn.commit()
 
     def login(self, email, password):
         cursor = self.conn.cursor()
@@ -26,15 +42,15 @@ class userDAO:
         user = cursor.fetchone()
         return user
 
-    def register(self, firstname, lastname, email, password):
+    def register(self, firstname, lastname, email, password, phoneNumber, securityQuestion, securityAnswer):
         cursor = self.conn.cursor()
         check_email = "select * from users where email = %s"
         cursor.execute(check_email, (email,))
         check_user = cursor.fetchone()
         if check_user is None:
-            query = "insert into users(first_name, last_name, email, password) values (%s, %s, %s, %s) on conflict do " \
-                    "nothing returning id "
-            cursor.execute(query, (firstname, lastname, email, password))
+            query = "insert into users(first_name, last_name, email, password, phone_number, security_question, security_answer) " \
+                    "values (%s, %s, %s, %s, %s, %s, %s) on conflict do nothing returning id"
+            cursor.execute(query, (firstname, lastname, email, password, phoneNumber, securityQuestion, securityAnswer))
             insertUser = cursor.fetchone()
             self.conn.commit()
             return insertUser[0]

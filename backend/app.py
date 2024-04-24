@@ -18,7 +18,20 @@ def get_users():
         return userController().getAllUsers()
     else:
         return jsonify("Not Supported"), 405
-
+    
+@app.route('/findByEmail', methods=['POST'])
+def findByEmail():
+    if request.method == 'POST':
+        return userController().getUserByEmail(request.json)
+    else:
+        return jsonify("Not Supported"), 405
+    
+@app.route('/changePassword', methods=['POST'])
+def changePassword():
+    if request.method == 'POST':
+        return userController().changePassword(request.json)
+    else:
+        return jsonify("Not Supported"), 405
 
 @app.route('/login', methods=['POST'])
 def login():
