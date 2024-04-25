@@ -84,7 +84,7 @@ const ReviewPage = () => {
           value={newComment}
           onChangeText={setNewComment}
         />
-        <TouchableOpacity onPress={addComment}>
+        <TouchableOpacity onPress={addComment} testID="add-comment-button">
           <MaterialIcons
             name="add-comment"
             size={24}
