@@ -11,7 +11,7 @@ describe('ReviewPage Fuzz Testing', () => {
   it('should handle random inputs without crashing', () => {
     const { getByPlaceholderText, getByTestId } = render(<Reviews />);
     
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 50; i++) {
       const randomComment = randomString(Math.random() * 100);
 
       const input = getByPlaceholderText('Write your own review...');
