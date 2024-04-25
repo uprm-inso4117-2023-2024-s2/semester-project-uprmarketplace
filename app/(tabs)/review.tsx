@@ -94,7 +94,7 @@ const ReviewPage = () => {
         <View style={styles.ratingContainer}>
           <Text>Your Rating: </Text>
           {[1, 2, 3, 4, 5].map((star) => (
-            <TouchableOpacity key={star} onPress={() => setUserRating(star)}>
+            <TouchableOpacity key={star} testID='star-rating-5' onPress={() => setUserRating(star)}>
               <FontAwesome name={userRating >= star ? 'star' : 'star-o'} size={24} color="black" />
             </TouchableOpacity>
           ))}
