@@ -1,10 +1,14 @@
 To run the project, follow these steps:
 
-1. Install Node.js
+1. Install **Node.js**
 
 2. Navigate to the Project Directory
 
 3. Open the terminal and run the following command:
+   ```
+   npm install
+   ```
+4. Run the following command:
    
    ```
    npx expo start
@@ -12,7 +16,7 @@ To run the project, follow these steps:
    
    Choose the web option and the project should open in your browser.
 
-4. If there's an error about expo and SDK dependencies, type into the terminal:
+5. If there's an error about expo and SDK dependencies, type into the terminal:
    
    ```
    npm install expo
