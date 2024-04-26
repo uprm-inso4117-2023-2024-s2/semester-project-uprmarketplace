@@ -9,17 +9,20 @@ interface Listing {
   name: string;
   price: string;
   description: string;
+  condition: string;
 }
 
 const data: Listing[] = [
-  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.' },
-  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez' },
-  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948' },
+  { id: '1', source: require('../../assets/images/image1.jpg'), name: 'Organic Chemistry Book', price: '$40', description: 'En buenas condiciones, levemente usado, for info call 787-040-2495.', condition: 'Buenas', },
+  { id: '2', source: require('../../assets/images/image2.jpg'), name: 'Bicicleta 26', price: '$75', description: 'Comunicarse al 787-440-9132. Gomas nueva, corre bien y no tiene daños en la pintura. Area de Mayaguez', condition: 'Nueva', },
+  { id: '3', source: require('../../assets/images/image3.jpg'), name: 'Bicicleta Usada', price: '$100', description: 'Poco uso, info: 312-194-1948', condition: 'Usada', },
 ];
 
 export default function BrowseScreen() {
   const [cartListings, setCartListings] = useState<Listing[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
 
   const updateCartList = (listing: Listing) => {
     setCartListings(prevListings => [...prevListings, listing]);
@@ -29,30 +32,47 @@ export default function BrowseScreen() {
     setCartListings(prevListings => prevListings.filter(listing => listing.id !== id));
   };
 
+  const showDetailModal = (listing: Listing) => {
+    setSelectedListing(listing);
+    setDetailModalVisible(true);
+    console.log('showDetailModal', listing);
+  };
+
   const renderItem = ({ item }: { item: Listing }) => (
-    <RoundedSquareImage
-      source={item.source}
-      name={item.name}
-      price={item.price}
-      description={item.description}
-      updateCartList={updateCartList}
-    />
+    <TouchableOpacity onPress={() => showDetailModal(item)} testID={`item-${item.id}`}>
+      <RoundedSquareImage
+        source={item.source}
+        name={item.name}
+        price={item.price}
+        description={item.description}
+        updateCartList={updateCartList}
+        onPress={() => showDetailModal(item)}
+      />
+    </TouchableOpacity>
   );
+  const clearCart = () => {
+    setCartListings([]);
+  };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="browse-screen">
       <View style={styles.header}>
-        {/* Render the title here */}
-        <Text style={styles.title}> </Text>
+        <TouchableOpacity onPress={() => showDetailModal(data[0])}>
+          <Text style={styles.title}>Browse</Text>
+        </TouchableOpacity>
         <View style={styles.cartIconContainer}>
-          <IconButton
-            icon="cart"
-            color="#fff"
-            size={25}
-            onPress={() => setModalVisible(true)}
-          />
+          <View style={styles.cartIconWrapper}>
+            <IconButton
+              icon="cart"
+              color="#fff"
+              size={25}
+              testID="cart-icon"
+              onPress={() => setModalVisible(true)}
+              style={styles.cartIcon}
+            />
+          </View>
           {cartListings.length > 0 && (
-            <Badge style={styles.badge}>{cartListings.length}</Badge>
+            <Badge style={styles.badge} testID={'cart-badge'}>{cartListings.length}</Badge>
           )}
         </View>
       </View>
@@ -69,46 +89,86 @@ export default function BrowseScreen() {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.flatListContent}
       />
-
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={detailModalVisible}
+        onRequestClose={() => setDetailModalVisible(false)}
+        testID="detail-modal"
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Cart</Text>
+              <Text style={styles.modalTitle}>{selectedListing?.name}</Text>
               <IconButton
                 icon="close"
                 color="#000"
                 size={24}
-                onPress={() => setModalVisible(false)}
+                onPress={() => setDetailModalVisible(false)}
                 style={styles.closeButton}
+                testID="close-button"
               />
             </View>
-            {cartListings.map(listing => (
-              <View style={styles.cartItem} key={listing.id}>
-                <View style={styles.imageContainer}>
-                  <Image source={listing.source} style={styles.image} />
-                </View>
-                <View style={styles.details}>
-                  <Text style={styles.name}>{listing.name}</Text>
-                  <Text style={styles.price}>{listing.price}</Text>
-                </View>
-                <IconButton
-                  icon="delete"
-                  color="#000"
-                  size={24}
-                  onPress={() => removeItemFromCart(listing.id)}
-                  style={styles.removeButton}
-                />
+            <View style={{ flexDirection: "row" }}>
+              {selectedListing && <Image source={selectedListing.source} style={styles.imagepopup} />}
+              <View style={{ marginLeft: 5, paddingLeft: 5 }}>
+                <Text style={styles.topicTitle}>Name</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-title">{selectedListing?.name}</Text>
+                <Text style={styles.topicTitle}>Description</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-description">{selectedListing?.description}</Text>
+                <Text style={styles.topicTitle}>Price</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-price">{selectedListing?.price}</Text>
+                <Text style={styles.topicTitle}>Conditions</Text>
+                <Text style={{ fontSize: 20 }} testID="modal-condition">{selectedListing?.condition}</Text>
               </View>
-            ))}
+            </View>
           </View>
         </View>
       </Modal>
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => setModalVisible(false)}
+  testID='cart-modal'
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <View style={styles.modalHeader}>
+        <Text style={styles.modalTitle}>Cart</Text>
+        <IconButton
+          icon="close"
+          color="#000"
+          size={24}
+          onPress={() => setModalVisible(false)}
+          style={styles.closeButton}
+        />
+      </View>
+      {cartListings.map(listing => (
+        <View style={styles.cartItem} key={listing.id}>
+          <View style={styles.imageContainer}>
+            <Image source={listing.source} style={styles.image} />
+          </View>
+          <View style={styles.details}>
+            <Text style={styles.name}>{listing.name}</Text>
+            <Text style={styles.price}>{listing.price}</Text>
+          </View>
+          <IconButton
+            icon="delete"
+            color="#000"
+            size={24}
+            onPress={() => removeItemFromCart(listing.id)}
+            style={styles.deleteButton}
+          />
+        </View>
+      ))}
+      
+      <TouchableOpacity onPress={clearCart} style={styles.clearCartButton}>
+        <Text style={styles.clearCartButtonText}>Clear</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </View>
   );
 }
@@ -118,6 +178,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 40,
+    backgroundColor: '#F0F0F0',
   },
   header: {
     flexDirection: 'row',
@@ -143,6 +204,22 @@ const styles = StyleSheet.create({
     top: -5,
     right: -5,
   },
+  cartIconWrapper: {
+    borderRadius: 25, 
+    backgroundColor: '#F5F5F5',
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  cartIcon: {
+    zIndex: 1,
+  },
   
   searchBar: {
     width: '90%',
@@ -151,6 +228,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   input: {
     fontSize: 16,
@@ -172,6 +257,14 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '80%',
     maxHeight: '80%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -214,5 +307,32 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginLeft: 'auto',
+  },
+  imagepopup: {
+    width: 150,
+    height: 150,
+  },
+  topicTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deleteButton: {
+    marginRight: 10,
+  },
+  clearCartButton: {
+    backgroundColor: '#FF5733',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  clearCartButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

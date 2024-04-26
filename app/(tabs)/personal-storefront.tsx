@@ -71,9 +71,9 @@ const PersonalStorefrontPage = () => {
 
   const renderCategories = () => {
     return allowedCategories.map((category, index) => (
-        <TouchableOpacity key={index} style={styles.categoryItem} onPress={() => categorySelectionHandler(category)}>
-            <Text style={styles.categoryText}>{category}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity key={index} style={styles.categoryItem} onPress={() => categorySelectionHandler(category)}>
+        <Text style={styles.categoryText}>{category}</Text>
+      </TouchableOpacity>
     ));
   };
   const toggleCategoryModal = () => {
@@ -101,11 +101,6 @@ const PersonalStorefrontPage = () => {
     setUserData(prevData => ({ ...prevData, profilePicture: newProfilePic }));
   };
 
-  const openStatusModal = (item) => {
-    setSelectedItem(item);
-    setStatusModalVisible(true);
-  };
-
   const updateStatus = (newStatus) => {
     if (selectedItem) {
       const updatedItems = userItems.map(item => {
@@ -116,36 +111,39 @@ const PersonalStorefrontPage = () => {
       });
       setUserItems(updatedItems);
     }
+    setSelectedItem(null); // Reset selectedItem after updating status
     setStatusModalVisible(false);
+    // Update newStatus state when selecting a new status
+    setNewStatus(newStatus);
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <View style={styles.itemContainer} testID={`item-${item.id}`}>
       <Image source={item.itemImage} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
         <Text style={styles.category}>{item.category}</Text>
-        <TouchableOpacity onPress={() => openStatusModal(item)}>
-          <Text style={styles.itemStatus}>{item.status}</Text>
-        </TouchableOpacity>
+        <View accessible={true} testID={`status-${item.id}`}>
+          <Text>{item.status}</Text>
+        </View>
         {!item.pinned && (
-        <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton} testID={"pinButton-" + item.id}>
-          <Text style={styles.pinButtonText}>Pin</Text>
-        </TouchableOpacity>
-      )}
+          <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton} testID={`pinButton-${item.id}`}>
+            <Text style={styles.pinButtonText}>Pin</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 
   const renderPinnedItem = ({ item }) => (
-    <View style={styles.itemContainer}>  
+    <View style={styles.itemContainer}>
       <Image source={item.itemImage} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.itemName}</Text>
-        <Text style={styles.itemPrice}>{item.itemPrice}</Text>  
+        <Text style={styles.itemPrice}>{item.itemPrice}</Text>
       </View>
-      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton} testID = "unpinButton">
+      <TouchableOpacity onPress={() => handleUnpinItem(item.id)} style={styles.unpinButton} testID="unpinButton">
         <Text style={styles.unpinButtonText}>Unpin</Text>
       </TouchableOpacity>
     </View>
@@ -170,7 +168,7 @@ const PersonalStorefrontPage = () => {
       }
     }
   };
-  
+
   const handleUnpinItem = (itemId) => {
     const updatedUserItems = userItems.map(item => {
       if (item.id === itemId) {
@@ -179,10 +177,9 @@ const PersonalStorefrontPage = () => {
       return item;
     });
     setUserItems(updatedUserItems);
-    const updatedPinnedItems = pinnedItems.filter(item => item.id !== itemId);
+    const updatedPinnedItems = pinnedItems.filter(item => updatedUserItems.find(userItem => userItem.id === item.id && userItem.pinned));
     setPinnedItems(updatedPinnedItems);
   };
-
 
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
@@ -319,18 +316,14 @@ const PersonalStorefrontPage = () => {
         visible={isStatusModalVisible}
         onRequestClose={() => setStatusModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
+        <View style={styles.modalContainer} testID="status-modal">
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Edit Status</Text>
-            <TouchableOpacity onPress={() => updateStatus('In Stock')}>
-              <Text style={styles.modalOption}>In Stock</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => updateStatus('Out of Stock')}>
-              <Text style={styles.modalOption}>Out of Stock</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => updateStatus('Unavailable')}>
-              <Text style={styles.modalOption}>Unavailable</Text>
-            </TouchableOpacity>
+            {['In Stock', 'Out of Stock', 'Unavailable'].map((status, index) => (
+              <TouchableOpacity key={index} onPress={() => updateStatus(status)}>
+                <Text style={styles.modalOption}>{status}</Text>
+              </TouchableOpacity>
+            ))}
             <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
               <Text style={styles.modalButton}>Cancel</Text>
             </TouchableOpacity>
@@ -351,6 +344,7 @@ const PersonalStorefrontPage = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         style={styles.itemList}
+        testID="filterButton"
       />
 
       {/* Category Button */}
@@ -360,6 +354,7 @@ const PersonalStorefrontPage = () => {
           iconColor="white"
           size={25}
           onPress={() => toggleCategoryModal()}
+          testID="categoryButton"
         />
       </View>
 
@@ -373,7 +368,9 @@ const PersonalStorefrontPage = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Category</Text>
-            {renderCategories()}
+            <ScrollView style={styles.categoryList} testID="categoryList">
+              {renderCategories()}
+            </ScrollView>
             <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
               <Text style={styles.modalButton}>Close</Text>
             </TouchableOpacity>
@@ -393,8 +390,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    padding: 20,
   },
   profileBanner: {
     width: '100%',
@@ -403,32 +398,31 @@ const styles = StyleSheet.create({
   },
   profileBannerIconContainer: {
     position: 'absolute',
-    right: -10,
-    top: 0,
+    right: 20,
+    top: 20,
+    zIndex: 1,
   },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: -70,
-    marginBottom: 20,
+    padding: 10,
+  },
+  profilePictureAndIconContainer: {
+    position: 'relative',
   },
   profilePicture: {
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 100,
     borderRadius: 50,
     borderWidth: 2,
     borderColor: '#fff',
   },
-  profilePictureAndIconContainer: {
-    position: 'relative',
-    marginRight: 20,
-    width: 100,
-    height: 100,
-  },
   profilePictureIconContainer: {
     position: 'absolute',
-    left: 70,
-    top: 60,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#000',
+    borderRadius: 15,
   },
   profileInfo: {
     justifyContent: 'center',
@@ -442,7 +436,11 @@ const styles = StyleSheet.create({
   profileNameAndIconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: -10,
+  },
+  profileName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   profileStatus: {
     fontSize: 16,
@@ -498,14 +496,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderRadius: 8,
     padding: 20,
-    width: '35%',
-    maxHeight: '80%',
+    borderRadius: 10,
+    width: '80%',
   },
   modalTitle: {
     fontSize: 20,
@@ -513,19 +510,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#888',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
+    marginTop: 10,
   },
   modalButton: {
-    fontSize: 16,
-    color: '#41a425',
+    marginLeft: 10,
+    color: 'blue',
+    fontWeight: 'bold',
   },
   modalOption: {
     fontSize: 16,
@@ -536,12 +536,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   bannerColumns: {
-    height: 200,
-    marginBottom: 10,
-    paddingRight: 10,
+    flexDirection: 'row',
   },
   bannerPreview: {
-    width: '100%',
+    width: 100,
     height: 100,
     resizeMode: 'cover',
     borderRadius: 8,
@@ -550,8 +548,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pictureRow: {
-    height: 120,
-    marginBottom: 10,
+    flexDirection: 'row',
   },
   picturePreview: {
     width: 100,
@@ -563,10 +560,34 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 20,
   },
-  errorMsg: {
-    color: 'red',
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    padding: 10,
+  },
+  itemImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+    marginRight: 10,
+  },
+  itemDetails: {
+    flex: 1,
+  },
+  itemName: {
     fontSize: 16,
-    marginBottom: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  itemPrice: {
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  category: {
+    fontSize: 14,
+    marginBottom: 5,
   },
   pinButton: {
     flex: 1,
@@ -578,9 +599,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
+    alignSelf: 'flex-start',
   },
   pinButtonText: {
     color: '#fff',
+    fontWeight: 'bold',
   },
   unpinButton: {
     flex: 1,
@@ -592,9 +615,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
+    alignSelf: 'flex-start',
   },
   unpinButtonText: {
     color: '#fff',
+    fontWeight: 'bold',
   },
   categoryButtonContainer: {
     position: 'absolute',
