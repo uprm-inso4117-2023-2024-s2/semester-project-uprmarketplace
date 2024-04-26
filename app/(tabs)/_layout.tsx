@@ -68,6 +68,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons name="rate-review" size={24} color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="testing"
+        options={{
+          title: 'New Listing',
+          tabBarIcon: ({ color }) => <MaterialIcons name="rate-review" size={24} color={color} />,
+        }}
+        />
     </Tabs>
   );
 }

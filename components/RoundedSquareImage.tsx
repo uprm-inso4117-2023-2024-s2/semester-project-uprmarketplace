@@ -8,7 +8,7 @@ interface Props {
   price: number;
   description: string;
   updateCartList: (item: Listing) => void;
-  onPress: () => void; // Add this line
+  onPress: () => void;
 }
 
 const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description, updateCartList, onPress }) => {
@@ -18,7 +18,7 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}> {/* Use onPress here */}
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.imageContainer}>
         <Image source={source} style={styles.image} />
       </View>
@@ -29,28 +29,38 @@ const RoundedSquareImage: React.FC<Props> = ({ source, name, price, description,
       </View>
       <IconButton
         icon="plus"
-        color="#000"
+        color="#007AFF"
         size={24}
+        testID={`add-to-cart-button-${name}`}
         onPress={handleAddToCart}
+        style={styles.iconButton}
       />
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    elevation: 2,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
   },
   imageContainer: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     borderRadius: 10,
     overflow: 'hidden',
   },
@@ -61,21 +71,27 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 12,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#333',
   },
   price: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 5,
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 4,
   },
   description: {
     fontSize: 14,
     color: '#888',
-    marginTop: 5,
+  },
+  iconButton: {
+    color: 'white',
+    backgroundColor: 'lightgreen',
+    borderRadius: 12,
   },
 });
 
