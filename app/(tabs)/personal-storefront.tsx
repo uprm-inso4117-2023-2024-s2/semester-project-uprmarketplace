@@ -42,7 +42,8 @@ const PersonalStorefrontPage = () => {
     { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
-  const filteredData = userItems.filter(item => allowedCategories.includes(item.category));
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const filteredData = selectedCategory ? userItems.filter(item => item.category === selectedCategory) : userItems;
 
   const [userData, setUserData] = useState<StudentData>({
     profilePicture: require('../../assets/images/profile-picture-default.png'),
@@ -62,7 +63,22 @@ const PersonalStorefrontPage = () => {
   const [isStatusModalVisible, setStatusModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [newStatus, setNewStatus] = useState('');
+  const [isCategoryModalVisible, setCategoryModalVisible] = useState(false);
 
+  const renderCategories = () => {
+    return allowedCategories.map((category, index) => (
+        <TouchableOpacity key={index} style={styles.categoryItem} onPress={() => categorySelectionHandler(category)}>
+            <Text style={styles.categoryText}>{category}</Text>
+        </TouchableOpacity>
+    ));
+  };
+  const toggleCategoryModal = () => {
+    setCategoryModalVisible(!isCategoryModalVisible);
+  };
+  const categorySelectionHandler = (category) => {
+    setSelectedCategory(category === selectedCategory ? null : category);
+    setCategoryModalVisible(false);
+  }
   const updateName = (newName) => {
     if (newName === '') {
       setError('Name cannot be empty');
@@ -331,6 +347,34 @@ const PersonalStorefrontPage = () => {
         keyExtractor={item => item.id}
         style={styles.itemList}
       />
+
+      {/* Category Button */}
+      <View style={styles.categoryButtonContainer}>
+        <IconButton
+          icon="filter"
+          color="#fff"
+          size={25}
+          onPress={() => toggleCategoryModal()}
+        />
+      </View>
+
+      {/* Category Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isCategoryModalVisible}
+        onRequestClose={() => setCategoryModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Category</Text>
+            {renderCategories()}
+            <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
+              <Text style={styles.modalButton}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -527,6 +571,12 @@ const styles = StyleSheet.create({
   },
   unpinButtonText: {
     color: '#fff',
+  },
+  categoryButtonContainer: {
+    position: 'absolute',
+    left: 200,
+    top: 256,
+    zIndex: 1,
   },
 });
 
