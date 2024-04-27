@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, Image, FlatList, Modal, StyleSheet, TouchableOpacity, TextInput, ScrollView, ImageBackground } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 const renderStars = (rating) => {
@@ -7,6 +7,8 @@ const renderStars = (rating) => {
   const emptyStars = '☆'.repeat(5 - rating);
   return filledStars + emptyStars;
 };
+
+const backgroundImage = require('../../assets/images/storefront_background.avif');
 
 // Hardcoded banners to test
 const banners = [
@@ -40,6 +42,8 @@ const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
     { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
     { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
+    { id: '3', itemName: 'Lab Coat', itemPrice: '$50', category: 'Book', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
+    { id: '4', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Tools', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -178,13 +182,14 @@ const PersonalStorefrontPage = () => {
   };
 
   return (
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
     <View style={styles.container}>
       <Image source={userData.profileBanner} style={styles.profileBanner} />
       <View style={styles.profileBannerIconContainer}>
         <IconButton
-          icon="brush"
-          color="#fff"
-          size={25}
+          icon="palette-outline"
+          iconColor="white"
+          size={30}
           onPress={() => setBannerModalVisible(true)}
           testID='profileBannerIcon'
         />
@@ -193,8 +198,8 @@ const PersonalStorefrontPage = () => {
         <View style={styles.profilePictureAndIconContainer}>
           <Image source={userData.profilePicture} style={styles.profilePicture} />
           <IconButton
-            icon="image-edit"
-            color="#fff"
+            icon="image-edit-outline"
+            iconColor="white"
             size={25}
             onPress={() => setProfilePicModalVisible(true)}
             testID='profilePictureIcon'
@@ -205,8 +210,8 @@ const PersonalStorefrontPage = () => {
           <View style={styles.profileNameAndIconContainer}>
             <Text style={styles.profileName}>{userData.name}</Text>
             <IconButton
-              icon="pencil"
-              color="#fff"
+              icon="pencil-outline"
+              iconColor="white"
               size={20}
               onPress={() => setNameModalVisible(true)}
               testID='editButton'
@@ -345,8 +350,8 @@ const PersonalStorefrontPage = () => {
       {/* Category Button */}
       <View style={styles.categoryButtonContainer}>
         <IconButton
-          icon="filter"
-          color="#fff"
+          icon="filter-outline"
+          iconColor="white"
           size={25}
           onPress={() => toggleCategoryModal()}
           testID="categoryButton"
@@ -373,10 +378,16 @@ const PersonalStorefrontPage = () => {
         </View>
       </Modal>
     </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
   },
@@ -414,7 +425,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   profileInfo: {
-    marginLeft: 20,
+    justifyContent: 'center',
+    marginTop: 60,
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
   },
   profileNameAndIconContainer: {
     flexDirection: 'row',
@@ -427,10 +444,53 @@ const styles = StyleSheet.create({
   },
   profileStatus: {
     fontSize: 16,
-    marginBottom: 5,
+    color: 'lightgray',
   },
   profileRatings: {
-    fontSize: 18,
+    fontSize: 20,
+    color: 'yellow',
+  },
+  listingsHeading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'white',
+  },
+  itemList: {
+    width: '100%',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  itemImage: {
+    width: 80,
+    height: 80,
+    borderWidth: 2,
+    borderRadius: 8,
+    marginRight: 15,
+    borderColor: 'white',
+  },
+  itemDetails: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  itemPrice: {
+    fontSize: 14,
+    color: 'white',
+  },
+  category: {
+    fontSize: 14,
+    color: 'white',
+  },
+  itemStatus: {
+    fontSize: 14,
+    color: 'white',
   },
   modalContainer: {
     flex: 1,
@@ -467,9 +527,13 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontWeight: 'bold',
   },
-  errorMsg: {
-    color: 'red',
+  modalOption: {
+    fontSize: 16,
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
     marginBottom: 10,
+    textAlign: 'center',
   },
   bannerColumns: {
     flexDirection: 'row',
@@ -478,7 +542,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'cover',
-    marginRight: 10,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#f0f0f0',
+    marginBottom: 20,
   },
   pictureRow: {
     flexDirection: 'row',
@@ -487,13 +554,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'cover',
-    marginRight: 10,
-  },
-  listingsHeading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginTop: 10,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: '#f0f0f0',
+    marginRight: 20,
+    marginBottom: 20,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -525,9 +590,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   pinButton: {
-    backgroundColor: '#0066ff',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    flex: 1,
+    top: 0,
+    right: 0,
+    backgroundColor: 'limegreen',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 5,
     alignSelf: 'flex-start',
   },
@@ -536,9 +606,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   unpinButton: {
-    backgroundColor: '#ff3300',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    flex: 1,
+    top: 0,
+    right: 0,
+    backgroundColor: 'green',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 5,
     alignSelf: 'flex-start',
   },
@@ -548,27 +623,19 @@ const styles = StyleSheet.create({
   },
   categoryButtonContainer: {
     position: 'absolute',
-    right: 20,
-    bottom: 20,
-    backgroundColor: '#0066ff',
-    borderRadius: 50,
-    padding: 10,
+    left: 200,
+    top: 256,
+    zIndex: 1,
   },
   categoryItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignItems: 'center',
   },
   categoryText: {
     fontSize: 16,
-  },
-  categoryList: {
-    maxHeight: 200,
-  },
-  modalOption: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: '#0066ff',
   },
 });
 
