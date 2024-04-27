@@ -8,7 +8,7 @@ const renderStars = (rating) => {
   return filledStars + emptyStars;
 };
 
-const backgroundImage = require('../../assets/images/storefront_background.avif');
+const backgroundImage = require('../../assets/images/storefront_background.png');
 
 // Hardcoded banners to test
 const banners = [
