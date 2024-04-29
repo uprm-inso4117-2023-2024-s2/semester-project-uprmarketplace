@@ -42,8 +42,8 @@ const PersonalStorefrontPage = () => {
   const [userItems, setUserItems] = useState([
     { id: '1', itemName: 'Lab Coat', itemPrice: '$50', category: 'Clothing', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
     { id: '2', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Clothing', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
-    { id: '3', itemName: 'Lab Coat', itemPrice: '$50', category: 'Book', itemImage: require('../../assets/images/image4.jpg'), status: 'In Stock', pinned: false },
-    { id: '4', itemName: 'Lab Goggles', itemPrice: '$15', category: 'Tools', itemImage: require('../../assets/images/image5.jpg'), status: 'Out of Stock', pinned: false },
+    { id: '3', itemName: 'Chemistry Book', itemPrice: '$30', category: 'Book', itemImage: require('../../assets/images/image1.jpg'), status: 'In Stock', pinned: false },
+    { id: '4', itemName: 'Bike', itemPrice: '$60', category: 'Tools', itemImage: require('../../assets/images/image3.jpg'), status: 'Out of Stock', pinned: false },
   ]);
   const allowedCategories = ["Book", "Clothing", "Tools", "Furniture"];
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -390,6 +390,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    alignItems: 'flex-start',
+    padding: 20,
   },
   profileBanner: {
     width: '100%',
@@ -398,31 +400,32 @@ const styles = StyleSheet.create({
   },
   profileBannerIconContainer: {
     position: 'absolute',
-    right: 20,
-    top: 20,
-    zIndex: 1,
+    right: -10,
+    top: 0,
   },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-  },
-  profilePictureAndIconContainer: {
-    position: 'relative',
+    marginTop: -70,
+    marginBottom: 20,
   },
   profilePicture: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '100%',
     borderRadius: 50,
     borderWidth: 2,
     borderColor: '#fff',
   },
+  profilePictureAndIconContainer: {
+    position: 'relative',
+    marginRight: 20,
+    width: 100,
+    height: 100,
+  },
   profilePictureIconContainer: {
     position: 'absolute',
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#000',
-    borderRadius: 15,
+    left: 70,
+    top: 60,
   },
   profileInfo: {
     justifyContent: 'center',
@@ -436,11 +439,7 @@ const styles = StyleSheet.create({
   profileNameAndIconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  profileName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: -10,
   },
   profileStatus: {
     fontSize: 16,
@@ -496,13 +495,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     backgroundColor: '#fff',
+    borderRadius: 8,
     padding: 20,
-    borderRadius: 10,
-    width: '80%',
+    width: '35%',
+    maxHeight: '80%',
   },
   modalTitle: {
     fontSize: 20,
@@ -510,22 +510,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#888',
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 10,
+    justifyContent: 'space-between',
   },
   modalButton: {
-    marginLeft: 10,
-    color: 'blue',
-    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#41a425',
   },
   modalOption: {
     fontSize: 16,
@@ -536,10 +533,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   bannerColumns: {
-    flexDirection: 'row',
+    height: 200,
+    marginBottom: 10,
+    paddingRight: 10,
   },
   bannerPreview: {
-    width: 100,
+    width: '100%',
     height: 100,
     resizeMode: 'cover',
     borderRadius: 8,
@@ -548,7 +547,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   pictureRow: {
-    flexDirection: 'row',
+    height: 120,
+    marginBottom: 10,
   },
   picturePreview: {
     width: 100,
@@ -560,34 +560,10 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 20,
   },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    padding: 10,
-  },
-  itemImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    marginRight: 10,
-  },
-  itemDetails: {
-    flex: 1,
-  },
-  itemName: {
+  errorMsg: {
+    color: 'red',
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  itemPrice: {
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  category: {
-    fontSize: 14,
-    marginBottom: 5,
+    marginBottom: 20,
   },
   pinButton: {
     flex: 1,
@@ -599,11 +575,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    alignSelf: 'flex-start',
   },
   pinButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
   },
   unpinButton: {
     flex: 1,
@@ -615,11 +589,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    alignSelf: 'flex-start',
   },
   unpinButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
   },
   categoryButtonContainer: {
     position: 'absolute',
