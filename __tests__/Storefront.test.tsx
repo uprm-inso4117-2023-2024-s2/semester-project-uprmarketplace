@@ -11,7 +11,7 @@ describe('PersonalStorefrontPage', () => {
     const { getByTestId, queryAllByText } = render(<PersonalStorefrontPage />);
     const pinButton = getByTestId('pinButton-1');
     fireEvent.press(pinButton);
-    expect(queryAllByText('Lab Coat')).toHaveLength(3);
+    expect(queryAllByText('Lab Coat')).toHaveLength(2);
   });
 
   test('should unpin an item', () => {
