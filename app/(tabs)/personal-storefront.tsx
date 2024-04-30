@@ -101,6 +101,11 @@ const PersonalStorefrontPage = () => {
     setUserData(prevData => ({ ...prevData, profilePicture: newProfilePic }));
   };
 
+  const openStatusModal = (item) => {
+    setSelectedItem(item);
+    setStatusModalVisible(true);
+  };
+
   const updateStatus = (newStatus) => {
     if (selectedItem) {
       const updatedItems = userItems.map(item => {
@@ -111,10 +116,7 @@ const PersonalStorefrontPage = () => {
       });
       setUserItems(updatedItems);
     }
-    setSelectedItem(null); // Reset selectedItem after updating status
     setStatusModalVisible(false);
-    // Update newStatus state when selecting a new status
-    setNewStatus(newStatus);
   };
 
   const renderItem = ({ item }) => (
@@ -124,9 +126,9 @@ const PersonalStorefrontPage = () => {
         <Text style={styles.itemName}>{item.itemName}</Text>
         <Text style={styles.itemPrice}>{item.itemPrice}</Text>
         <Text style={styles.category}>{item.category}</Text>
-        <View accessible={true} testID={`status-${item.id}`}>
-          <Text>{item.status}</Text>
-        </View>
+        <TouchableOpacity onPress={() => openStatusModal(item)}>
+          <Text style={styles.itemStatus}>{item.status}</Text>
+        </TouchableOpacity>
         {!item.pinned && (
           <TouchableOpacity onPress={() => handlePinItem(item.id)} style={styles.pinButton} testID={`pinButton-${item.id}`}>
             <Text style={styles.pinButtonText}>Pin</Text>
@@ -183,201 +185,205 @@ const PersonalStorefrontPage = () => {
 
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-    <View style={styles.container}>
-      <Image source={userData.profileBanner} style={styles.profileBanner} />
-      <View style={styles.profileBannerIconContainer}>
-        <IconButton
-          icon="palette-outline"
-          iconColor="white"
-          size={30}
-          onPress={() => setBannerModalVisible(true)}
-          testID='profileBannerIcon'
-        />
-      </View>
-      <View style={styles.profileContainer}>
-        <View style={styles.profilePictureAndIconContainer}>
-          <Image source={userData.profilePicture} style={styles.profilePicture} />
+      <View style={styles.container}>
+        <Image source={userData.profileBanner} style={styles.profileBanner} />
+        <View style={styles.profileBannerIconContainer}>
           <IconButton
-            icon="image-edit-outline"
+            icon="palette-outline"
             iconColor="white"
-            size={25}
-            onPress={() => setProfilePicModalVisible(true)}
-            testID='profilePictureIcon'
-            style={styles.profilePictureIconContainer}
+            size={30}
+            onPress={() => setBannerModalVisible(true)}
+            testID='profileBannerIcon'
           />
         </View>
-        <View style={styles.profileInfo}>
-          <View style={styles.profileNameAndIconContainer}>
-            <Text style={styles.profileName}>{userData.name}</Text>
+        <View style={styles.profileContainer}>
+          <View style={styles.profilePictureAndIconContainer}>
+            <Image source={userData.profilePicture} style={styles.profilePicture} />
             <IconButton
-              icon="pencil-outline"
+              icon="image-edit-outline"
               iconColor="white"
-              size={20}
-              onPress={() => setNameModalVisible(true)}
-              testID='editButton'
+              size={25}
+              onPress={() => setProfilePicModalVisible(true)}
+              testID='profilePictureIcon'
+              style={styles.profilePictureIconContainer}
             />
           </View>
-          <Text style={styles.profileStatus}>{userData.status}</Text>
-          <Text style={styles.profileRatings}>{renderStars(userData.averageRatings)}</Text>
-        </View>
-      </View>
-
-      {/* Modal for editing name */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isNameModalVisible}
-        onRequestClose={() => setNameModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter new name"
-              value={newName}
-              onChangeText={setNewName}
-            />
-            {error ? <Text style={styles.errorMsg}>{error}</Text> : null}
-            <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={() => setNameModalVisible(false)}>
-                <Text style={styles.modalButton}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => { updateName(newName); }} testID='saveButton'>
-                <Text style={styles.modalButton}>Save</Text>
-              </TouchableOpacity>
+          <View style={styles.profileInfo}>
+            <View style={styles.profileNameAndIconContainer}>
+              <Text style={styles.profileName}>{userData.name}</Text>
+              <IconButton
+                icon="pencil-outline"
+                iconColor="white"
+                size={20}
+                onPress={() => setNameModalVisible(true)}
+                testID='editButton'
+              />
             </View>
+            <Text style={styles.profileStatus}>{userData.status}</Text>
+            <Text style={styles.profileRatings}>{renderStars(userData.averageRatings)}</Text>
           </View>
         </View>
-      </Modal>
 
-      {/* Modal for editing banner */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isBannerModalVisible}
-        onRequestClose={() => setBannerModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Banner</Text>
-            <ScrollView showsVerticalScrollIndicator={true} style={styles.bannerColumns}>
-              {banners.map((banner, index) => (
-                <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
-                  <Image source={banner} style={styles.bannerPreview} />
+        {/* Modal for editing name */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isNameModalVisible}
+          onRequestClose={() => setNameModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Edit Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter new name"
+                value={newName}
+                onChangeText={setNewName}
+              />
+              {error ? <Text style={styles.errorMsg}>{error}</Text> : null}
+              <View style={styles.modalButtons}>
+                <TouchableOpacity onPress={() => setNameModalVisible(false)}>
+                  <Text style={styles.modalButton}>Cancel</Text>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={() => setBannerModalVisible(false)}>
-                <Text style={styles.modalButton}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => { updateBanner(newBanner); setBannerModalVisible(false); }}>
-                <Text style={styles.modalButton}>Save</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Modal for editing profile picture */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isProfilePicModalVisible}
-        onRequestClose={() => setProfilePicModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Profile Picture</Text>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.pictureRow}>
-              {profilePictures.map((image, index) => (
-                <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
-                  <Image source={image} style={styles.picturePreview} />
+                <TouchableOpacity onPress={() => { updateName(newName); }} testID='saveButton'>
+                  <Text style={styles.modalButton}>Save</Text>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={() => setProfilePicModalVisible(false)}>
-                <Text style={styles.modalButton}>Cancel</Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal for editing banner */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isBannerModalVisible}
+          onRequestClose={() => setBannerModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Banner</Text>
+              <ScrollView showsVerticalScrollIndicator={true} style={styles.bannerColumns}>
+                {banners.map((banner, index) => (
+                  <TouchableOpacity key={index} onPress={() => setNewBanner(banner)}>
+                    <Image source={banner} style={styles.bannerPreview} />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity onPress={() => setBannerModalVisible(false)}>
+                  <Text style={styles.modalButton}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { updateBanner(newBanner); setBannerModalVisible(false); }}>
+                  <Text style={styles.modalButton}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal for editing profile picture */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isProfilePicModalVisible}
+          onRequestClose={() => setProfilePicModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Profile Picture</Text>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={true} style={styles.pictureRow}>
+                {profilePictures.map((image, index) => (
+                  <TouchableOpacity key={index} onPress={() => setNewProfilePic(image)}>
+                    <Image source={image} style={styles.picturePreview} />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity onPress={() => setProfilePicModalVisible(false)}>
+                  <Text style={styles.modalButton}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { updateProfilePic(newProfilePic); setProfilePicModalVisible(false); }}>
+                  <Text style={styles.modalButton}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal for editing status */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isStatusModalVisible}
+          onRequestClose={() => setStatusModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Edit Status</Text>
+              <TouchableOpacity onPress={() => updateStatus('In Stock')}>
+                <Text style={styles.modalOption}>In Stock</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => { updateProfilePic(newProfilePic); setProfilePicModalVisible(false); }}>
-                <Text style={styles.modalButton}>Save</Text>
+              <TouchableOpacity onPress={() => updateStatus('Out of Stock')}>
+                <Text style={styles.modalOption}>Out of Stock</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateStatus('Unavailable')}>
+                <Text style={styles.modalOption}>Unavailable</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
+                <Text style={styles.modalButton}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Modal for editing status */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isStatusModalVisible}
-        onRequestClose={() => setStatusModalVisible(false)}
-      >
-        <View style={styles.modalContainer} testID="status-modal">
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Status</Text>
-            {['In Stock', 'Out of Stock', 'Unavailable'].map((status, index) => (
-              <TouchableOpacity key={index} onPress={() => updateStatus(status)}>
-                <Text style={styles.modalOption}>{status}</Text>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
-              <Text style={styles.modalButton}>Cancel</Text>
-            </TouchableOpacity>
+        <Text style={styles.listingsHeading}>Pinned Listings</Text>
+        {pinnedItems.map(pinnedItem => (
+          <View key={pinnedItem.id}>
+            {renderPinnedItem({ item: pinnedItem })}
           </View>
-        </View>
-      </Modal>
+        ))}
 
-      <Text style={styles.listingsHeading}>Pinned Listings</Text>
-      {pinnedItems.map(pinnedItem => (
-        <View key={pinnedItem.id}>
-          {renderPinnedItem({ item: pinnedItem })}
-        </View>
-      ))}
-
-      <Text style={styles.listingsHeading}>Listings</Text>
-      <FlatList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.itemList}
-        testID="filterButton"
-      />
-
-      {/* Category Button */}
-      <View style={styles.categoryButtonContainer}>
-        <IconButton
-          icon="filter-outline"
-          iconColor="white"
-          size={25}
-          onPress={() => toggleCategoryModal()}
-          testID="categoryButton"
+        <Text style={styles.listingsHeading}>Listings</Text>
+        <FlatList
+          data={filteredData}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          style={styles.itemList}
+          testID="filterButton"
         />
-      </View>
 
-      {/* Category Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isCategoryModalVisible}
-        onRequestClose={() => setCategoryModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Category</Text>
-            <ScrollView style={styles.categoryList} testID="categoryList">
-              {renderCategories()}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
-              <Text style={styles.modalButton}>Close</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Category Button */}
+        <View style={styles.categoryButtonContainer}>
+          <IconButton
+            icon="filter-outline"
+            iconColor="white"
+            size={25}
+            onPress={() => toggleCategoryModal()}
+            testID="categoryButton"
+          />
         </View>
-      </Modal>
-    </View>
+
+        {/* Category Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isCategoryModalVisible}
+          onRequestClose={() => setCategoryModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Category</Text>
+              <ScrollView style={styles.categoryList} testID="categoryList">
+                {renderCategories()}
+              </ScrollView>
+              <TouchableOpacity onPress={() => setCategoryModalVisible(false)}>
+                <Text style={styles.modalButton}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </ImageBackground>
   );
 };
